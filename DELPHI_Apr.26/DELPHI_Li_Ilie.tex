@@ -4,6 +4,7 @@
 \usepackage{booktabs}
 \usepackage[table]{xcolor}
 \usepackage{float}
+\newcommand{\myColor}{red}
 % \usepackage[section]{placeins}
 \access{Advance Access Publication Date: Day Month Year}
 \appnotes{Manuscript Category}
@@ -25,7 +26,7 @@ London, ON, N6A 5B7, Canada}
 \editor{Associate Editor: XXXXXXX}
 
 \abstract{\textbf{Motivation:} Proteins usually perform their functions by interacting with other proteins, which is why accurately predicting protein-protein interaction (PPI) binding sites is a fundamental problem. Experimental methods are slow and expensive. Therefore, great efforts are being made towards increasing the performance of computational methods.\\
-\textbf{Results:} We propose DELPHI (DEep Learning Prediction of Highly probable protein Interaction sites), a new sequence-based deep learning suite for PPI binding sites prediction. DELPHI has an ensemble structure which combines a CNN and a RNN component with fine tuning technique. Three novel features, HSP, position information, and ProtVec are used in addition to nine existing ones. We comprehensively compare DELPHI to nine state-of-the-art programs on five datasets, and DELPHI outperforms the competing methods in all metrics even though its training dataset shares the least similarities with the testing datasets. In the most important metrics AUPRC and MCC, it surpasses the second best programs by as much as 18.5\% and 27.7\%. \\
+\textbf{Results:} We propose DELPHI (DEep Learning Prediction of Highly probable protein Interaction sites), a new sequence-based deep learning suite for PPI binding sites prediction. DELPHI has an ensemble structure which combines a CNN and a RNN component with fine tuning technique. Three novel features, HSP, position information, and ProtVec are used in addition to nine existing ones. \textcolor{\myColor}{We comprehensively compare DELPHI to nine state-of-the-art programs on five datasets, and DELPHI outperforms the competing methods in all metrics even though its training dataset shares the least similarities with the testing datasets. In the most important metrics AUPRC and MCC, it surpasses the second best programs by as much as 18.5\% and 27.7\%. We also demonstrated the improvement of using the ensemble model and the three new features.} \\
 \textbf{Availability:} The trained model, source code for training, predicting, and data processing are freely available at \texttt{https://github.com/lucian-ilie/DELPHI}. 
 All datasets used in this study can be downloaded at
 \texttt{http://www.csd.uwo.ca/\~{}ilie/DELPHI/}.\\
@@ -42,16 +43,44 @@ Machine learning methods use feature groups to represent each protein sequence. 
 
 The learning structure is crucial to PPI binding sites classification problems. Previously explored architectures include random forest \citep{wei2016protein, wang2019protein}, SVM \citep{wei2016protein}, logistic regression \citep{zhang2019scriber}, Bayes classifier \citep{murakami2010applying}, artificial neural networks \citep{singh2014springs}. Recently, convolutional neural network (CNN) \citep{zeng2019protein} and recurrent neural network (RNN) \citep{zhang2019sequence} have also been applied to solve this problem. 
 
-We introduce a new sequence-based PPI binding sites prediction method, DELPHI (DEep Learning Prediction of Highly probable protein Interaction sites), that combines a CNN and a RNN structure. It uses twelve feature groups to represent protein sequences including three novel features, high-scoring segment pair (HSP), position information, and a reduced 3-mer amino acid embedding (ProtVec1D).
+We introduce a new sequence-based PPI binding sites prediction method, DELPHI (DEep Learning Prediction of Highly probable protein Interaction sites), that combines a CNN and a RNN structure with fine tuning technique. It uses twelve feature groups to represent protein sequences including three novel features, high-scoring segment pair (HSP), position information, and a reduced 3-mer amino acid embedding (ProtVec1D).
 
-We have comprehensively compared DELPHI with nine state-of-the-art programs on five datasets. DELPHI provides the best predictions in all metrics. The contributions of the DELPHI study are as follows.
-First, a novel fine tuned ensemble model combing CNN and RNN is constructed in which three features are used the first time in this problem. Second, a many-to-one structure, that not only serves as a data augmentation technique but also improves the prediction performance, is applied. Third, a data processing and feature construction suite, including new features, is provided, aiming to alleviating the difficulty of tedious feature computation by the users.
+We have comprehensively compared DELPHI with nine state-of-the-art programs on five datasets. DELPHI provides the best predictions in all metrics. The contributions of the DELPHI study are as follows. \textcolor{\myColor}{
+First, a novel fine tuned ensemble model combing CNN and RNN is constructed. Second, three novel features, which are believed to be used the first time in PPI binding site prediction, are introduced. Third, a data processing and feature construction suite, is provided, aiming to alleviating the difficulty of tedious feature computation by the users.}
 
 \begin{methods}
 \section{Materials and Methods}
 \subsection{Datasets}
+\textcolor{\myColor}{Following the modern machine applications development process, we use three sets of data to train and evaluate the performance of DELPHI: training, validation, and testing. The model is trained on the training data and validated on the validation data to ensure low variance i.e. avoid overfitting. After several iterations of tuning, the model is obtained and ran on the independent testing data, and then performance on testing data is reported. Note that the model never observes the testing data during the training and validation process.}
+
+\subsubsection{Testing datasets}\label{testing_data}
+\textcolor{\myColor}{Five datasets are used in the comparative assessment. We name them by the size of the data: Dset\_186, Dset\_72, Dset\_164, Dset\_448, and Dset\_355. The first four are publicly available dataset from previous studies \citep{murakami2010applying} \citep{dhole2014sequence} \citep{zhang2019scriber}, and the last one, Dset\_355, is a subset of Dset\_448. Dset\_186, Dset\_72, Dset\_164 have been widely used and explored as benchmark datasets by numerous publications while Dset\_448 is more recent.} 
+
+\textcolor{\myColor}{
+Dset\_186 and Dset\_72 was constructed in \citep{murakami2010applying}. Dset\_186 is built based on a PDB \citep{berman2002protein} collection. The author applied a six-step filtering process to refine the data including removing structures with missing residues, removing chains with the same UniprotKB/Swiss-Prot accession, removing transmembrane proteins, removing dimeric structures, removing proteins with buried surface accessibility and interface polarity under certain range, and similarities elimination. Dset\_72 was constructed based on the protein-protein benchmark set version 3.0 \citep{hwang2008protein}. The author then removed similarities between Dset\_186 and Dset\_72.
+}
+
+\textcolor{\myColor}{
+Dset\_164 was constructed by the author of \citep{dhole2014sequence}. The author applied the same filtering technique as in Dset\_186 and Dset\_72 on newly annotated proteins in PDB since the publication of Dset\_186 and Dset\_72 (from June 2010 to November 2013) and obtained 164 protein sequences. 
+}
+
+\textcolor{\myColor}{
+Dset\_448 was constructed by the author of \citep{zhang2019scriber}. The raw data of Dset\_448 was from the BioLip database \citep{yang2012biolip} where binding sites are defined if the distance between an atom of a residues and an atom of a given protein partner <0.5 \AA{} plus the sum of the Van der Waals radii of the two atoms. The raw data was further processed by the authors, removing protein fragments, mapping BioLip sequences to UniProt sequences, clustering so that no similarities above 25\% is shared within the Dset\_448. 
+This dataset is the most recent one as well as the biggest.}
+
+\textcolor{\myColor}{
+Dset\_355 is a subset of Dset\_448. The purpose of having Dset\_355 is for a fair comparison with a recently published deep learning based PPI site predictor, DLPred.. The training data of DLPred has some identical sequences with Dset\_448, therefore we removed 93 proteins in Dset\_448 that share more than 40\% similarities with DLPred training data and formed a reduced testing dataset of 355 proteins (Dset\_355).
+}
+
+\textcolor{\myColor}{
+The number of sequences, binding, non-binding, and the ratio of binding residues are shown in Table \ref{tab_dataset}. Within each testing dataset, sequences are dis-similar. Among the four testing dataset, excluding Dset\_355, there are very few overlaps. The overlap details of dataset overlap can be seen in Table 1 in the supplementary material.}
+%According to the PSI-CD-HIT results, the training datasets of DLPred and SCRIBER still contain some proteins that share more than 25\% similarity to Dset\_186,  Dset\_72, and Dset\_164. However, we kept these testing datasets untouched because otherwise we would have to remove too many proteins from them. The training datasets of the competing programs can not be changed because the models are pre-trained. Note that all testing data share less than 25\% similarity to the training dataset of DELPHI. 
 \subsubsection{Training and validation datasets}
-A large, high quality dataset was provided in \citep{zhang2019comprehensive}. In this dataset, Uniprot sequences are annotated with Protein, DNA, RNA, and small ligands binding information at the residue level. We further processed this dataset as follows. First, we kept only the sequences with protein-protein binding information to focus on protein-protein binding. Then we removed any sequences from training dataset sharing more than 25\% similarities, as measured by PSI-CD-hit \citep{li2006cd,fu2012cd}, with any sequences in testing datasets. It is well acknowledged that similar sequences between training and testing datasets negatively affect the generalization of the evaluated performance of a machine learning model. Also, proteins with higher levels of similarity can be accurately predicted by the alignment-based methods \citep{zhang2018review}. The similarity threshold is picked differently by different programs ranging from 25\% to 50\%. We picked the strictest value of 25\% to match to one of the closest competing programs, SCRIBER \citep{zhang2019scriber}, for a fair comparison. We used PSI-CD-HIT because it is fast, accurate and well maintained in the CD-HIT suite. Also, it is able to cluster sequences with similarity at low as 25\%, whereas CD-HIT works only down to 40\%. Finally, we ran PSI-CD-hit again on the rest of the training protein sequences so no sequences shared more than 25\% similarities among training data. This ensures the training data is as diverse as possible. A dataset of 9,982 protein sequences was constructed. From it, we randomly pick eight ninth (8,872) as the training dataset and one ninth (1,110) as the validation dataset.
+\textcolor{\myColor}{
+We construct our training and validation data with three criteria in mind. First, it needs to be relatively large because deep learning models need large amount of data to train. Second, no similarities (25\%) are allowed between training/validation and testing data. Third, sequences should be dis-similar (25\%) within the training and validation data. }
+
+\textcolor{\myColor}{
+After the preparation of the five testing datasets, we started collecting our training and validation datasets. We firstly obtained a large, high quality dataset from a recent survey paper \citep{zhang2019comprehensive}. In this dataset, Uniprot sequences are annotated with Protein, DNA, RNA, and small ligands binding information at the residue level. We further processed this dataset as follows. First, we kept only the sequences with protein-protein binding information to focus on protein-protein binding. Then we removed any sequences from training dataset sharing more than 25\% similarities, as measured by PSI-CD-hit \citep{li2006cd,fu2012cd}, with any sequences in the five testing datasets. It is well acknowledged that similar sequences between training and testing datasets negatively affect the generalization of the evaluated performance of a machine learning model. Also, proteins with higher levels of similarity can be accurately predicted by the alignment-based methods \citep{zhang2018review}. The similarity threshold is picked differently by different programs ranging from 25\% to 50\%. We picked the strictest value of 25\% to match to one of the closest competing programs, SCRIBER \citep{zhang2019scriber}, for a fair comparison. We used PSI-CD-HIT because it is fast, accurate and well maintained in the CD-HIT suite. Also, it is able to cluster sequences with similarity at low as 25\%, whereas CD-HIT works only down to 40\%. Finally, we ran PSI-CD-hit again on the rest of the protein sequences so no sequences shared more than 25\% similarities. This ensures the training data is as diverse as possible as well as the dis-similarity between the training and validation dataset. A dataset of 9,982 protein sequences was constructed. From it, we randomly pick eight ninth (8,872) as the training dataset and one ninth (1,110) as the validation dataset. }
 
 \begin{table}[H]
     \centering
@@ -71,8 +100,7 @@ A large, high quality dataset was provided in \citep{zhang2019comprehensive}. In
     \label{tab_dataset}%
 \end{table}%
 
-\subsubsection{Testing datasets}\label{testing_data}
-Five datasets are used in the comparative assessment. Four of them are publicly available dataset from previous studies: Dset\_186 \citep{murakami2010applying}, Dset\_72 \citep{hwang2008protein}, Dset\_164 \citep{dhole2014sequence}, and Dset\_448 \citep{zhang2019scriber}. The first three have been widely used and explored by previous studies while Dset\_448 is more recent. The raw data of Dset\_448 was from the BioLip database \citep{yang2012biolip} where binding sites are defined if the distance between an atom of a residues and an atom of a given protein partner <0.5 \AA{} plus the sum of the Van der Waals radii of the two atoms. The raw data was further processed by the authors of \citep{zhang2019scriber}, removing protein fragments, mapping BioLip sequences to UniProt sequences, clustering so that no similarities above 25\% is shared within the dataset. The number of sequences, binding, non-binding, and the ratio of binding residues are shown in Table \ref{tab_dataset}. The training dataset of DLPred has some overlaps with Dset\_448, therefore we removed 93 proteins in Dset\_448 that share more than 40\% similarities with DLPred training data and formed a reduced testing dataset of 355 proteins (Dset\_355).  According to the PSI-CD-HIT results, the training datasets of DLPred and SCRIBER still contain some proteins that share more than 25\% similarity to Dset\_186,  Dset\_72, and Dset\_164. However, we kept these testing datasets untouched because otherwise we would have to remove too many proteins from them. The training datasets of the competing programs can not be changed because the models are pre-trained. Note that all testing data share less than 25\% similarity to the training dataset of DELPHI. 
+
 
 \begin{table}[H]
   \centering
@@ -134,6 +162,8 @@ After computing all the feature vectors, the values in in each row vector are no
 v_\text{norm}=\dfrac{v-\text{min}}{\text{max}-\text{min}}\label{eq_normalized}
 \end{equation}
 
+\textcolor{\myColor}{The feature computation details including programs used, parameters, commands used can be found in section 2 in the supplementary material.}
+
 
 
 \subsection{Model architecture}
@@ -165,21 +195,21 @@ The final model combines the core layers of the above mentioned CNN and RNN mode
 Fine tuning is used in this ensemble model. The convolution layer in the CNN network and the bidirectional GRU layer in the RNN network are tuned separated using the same training/validation dataset. After achieving the best performance on the CNN and the RNN components, the weights of the convolution and the GRU layer are saved to files. In the ensemble model, the convolution and the GRU layer load the saved weights from the file and freeze the weights, so that during the process of training, the convolution and the GRU layer stay unchanged. Training and validation data are used again only to train the fully connected layers in the ensemble model.
 
 \subsection{Implementation}
-The program is written in Keras \citep{chollet2015keras} with TensorFlow GPU \citep{tensorflow2015-whitepaper} back end. All features are computed from sequence only. We alleviate the burden of feature computation from users by providing all computation programs and a pipeline script. We ease the system configuration process by providing users a pip package list which enables one-command installation. 
+The program is written in Keras \citep{chollet2015keras} (Python 3.5.2) with TensorFlow GPU \citep{tensorflow2015-whitepaper} back end. All features are computed from sequence only. We alleviate the burden of feature computation from users by providing all computation programs and a pipeline script. We ease the system configuration process by providing users a pip package list which enables one-command installation. 
 
 Classifying protein binding residue is an imbalanced problem. To cope with that, different class weights \citep{ting2002instance} are assigned to the positive and negative samples, so that the model pays more attention to the minority class, which is the binding sites.  The values are determined by the inverse of the class distribution in the training datasets. In our program, the weights are 0.55 and 4.97 for the non-binding and binding sites respectively. 
 
-During training, we shuffle the data before each epoch. Since the sliding window is used to extract each 31-mer, adjacent data entries are very similar; only the first and the last residue differ from the previous and the next data entry. Shuffling the whole training data diversifies the input in each batch. We experimentally trained the model with and without data shuffling, and shuffling the data rendered better predictions. In Keras, this can be done by 
+During training, we shuffle the data before each epoch. Since the sliding window is used to extract each 31-mer, adjacent data entries are very similar; only the first and the last residue differ from the previous and the next data entry. Shuffling the whole training data diversifies the input in each batch. We experimentally trained the model with and without data shuffling, and shuffling the data rendered better predictions. 
 
 \subsection{Parameter tuning}
-Parameters and hyper-parameters are chosen based on the training dataset while applying early stopping \citep{prechelt1998early} on the validation set. Early stopping halts the training process when a performance drop on the validation set is detected. This is to avoid overfitting the training dataset. We chose all parameters with the purpose to maximize area under the precision-recall curve (AUPRC) of the training data. All testing results are then carried using the already tuned model. All parameters and hyper-parameters used in this model are shown in Table \ref{tab_parameter}. 
-
-The DELPHI model takes 2.1 hours to train the CNN component, 0.5 hour to train the RNN component and 1.3 hours to train the ensemble model on our testing cluster.
+\textcolor{\myColor}{
+Parameters and hyper-parameters are chosen based on the training dataset while applying early stopping \citep{prechelt1998early} on the validation set. Early stopping halts the training process when a performance drop on the validation set is detected. This is to avoid overfitting the training dataset. We chose all parameters with the purpose to maximize area under the precision-recall curve (AUPRC) of the training data.} All testing results are then carried using the already tuned model. All parameters and hyper-parameters used in this model are shown in Table \ref{tab_parameter}. 
+The DELPHI model takes 2.1 hours to train the CNN component, 0.5 hour to train the RNN component and 1.3 hours to train the ensemble model on a Linux (Ubuntu 16.04) machine with 24 CPUs (Intel Xeon v4, 3.00GHz), 256GB memory, and a Nvidia Tesla K40c GPU.
 
 % Table generated by Excel2LaTeX from sheet 'Sheet1'
 \begin{table}[H]
   \centering
-  \caption{Parameters used in DELPHI. Parameters are divided into four groups: CNN, RNN, ensemble model, and hyper-parameters.}
+  \caption{Parameters used in DELPHI. Parameters are divided into four groups: CNN, RNN, ensemble model, and hyper-parameters. \textcolor{\myColor}{Parameters are tuned on the training dataset with early stopping on the validation datasets.}}
     \begin{tabular}{@{}p{4.4cm}r@{}}
     \toprule
     Parameter & Value \\
@@ -216,12 +246,12 @@ The DELPHI model takes 2.1 hours to train the CNN component, 0.5 hour to train t
 \subsection{Competing methods}
 We have comprehensively compared DELPHI with nine state-of-the-art machine learning based methods. The methods are selected using the following criteria. First, the program is a sequence-based method as sequence information is readily available for most proteins. Second, the program is available in the form of source code or web server. Lastly, the program takes in any input sequence in FASTA format and produces the results on an average-length protein within thirty minutes. Following these criteria, DLpred \citep{zhang2019sequence}, SCRIBER \citep{zhang2019scriber}, SSWRF \citep{wei2016protein}, SPRINT \citep{taherzadeh2016sequence}, CRF-PPI \citep{wei2015cascade}, LORIS \citep{dhole2014sequence}, SPRINGS \citep{singh2014springs}, PSIVER \citep{murakami2010applying}, and SPPIDER \citep{porollo2007prediction} are selected.
 
-All competing methods are pre-trained using their own training and validation datasets. The most recent two programs, DLPred and SCRIBER, use 5719 and 843 training proteins respectively. The training dataset of DLPred is obtained from CullPDB datasets \citep{wang2003pisces} and further filtered by the authors. The SCRIBER training dataset is originally from the BioLip database. This dataset contains also protein binding information with DNA, RNA, and ligand, which is used by SCRIBER.
+\textcolor{\myColor}{It is fairly difficulty to have a clean comparison among all programs. Ideally, we would like to have every program trained on sequences of less than 25\% similarities to any testing datasets, but all competing programs are either pre-trained or work as a web server, so there will be some level of similarities for them. Although we had to use other programs as is, we selected DELPHI's training dataset to ensure it meets similarity criteria. Notice that this is to the disadvantage of DELPHI.}
 
-All tests have been performed on a Linux (Ubuntu 16.04) machine with 24 CPUs (Intel Xeon v4, 3.00GHz), 256GB memory, and a Nvidia Tesla K40c GPU.
+ The most recent two programs, DLPred and SCRIBER, use 5719 and 843 training proteins respectively. The training dataset of DLPred is obtained from CullPDB datasets \citep{wang2003pisces} and further filtered by the authors. The SCRIBER training dataset is originally from the BioLip database. This dataset contains also protein binding information with DNA, RNA, and ligand, which is used by SCRIBER.
 
 \subsection{Evaluation scheme}
-Similar to previous studies, we use sensitivity, specificity, precision, accuracy, F1-score (F1), Matthews correlation coefficient (MCC), area under the receiver operating characteristic curve (AUROC), and area under the precision-recall curve (AUPRC) to measure the prediction performance. All programs output a prediction value for each amino acid, and thus the receiver operating characteristic (ROC) curve and the precision-recall (PR) curve can be drawn. AUROC and AUPRC are computed based on the curves using Scikit-learn~ \citep{scikit-learn}. We focus more on AUPRC because they are threshold independent and convey an overall performance measurement of a program. Also, AUPRC is more informative than AUROC when the dataset is imbalanced \citep{saito2015precision}. The rest of the metrics are calculated using a binding threshold which is determined after obtaining the prediction scores from each program. Since each program's output is of different scale, for each program, we pick the threshold such that for a given testing dataset, the number of predicted scores above the threshold is equal to the real number of binding sites in the dataset. 
+Similar to previous studies, we use sensitivity, specificity, precision, accuracy, F1-score (F1), Matthews correlation coefficient (MCC), area under the receiver operating characteristic curve (AUROC), and area under the precision-recall curve (AUPRC) to measure the prediction performance. All programs output a prediction value for each amino acid, and thus the receiver operating characteristic (ROC) curve and the precision-recall (PR) curve can be drawn. AUROC and AUPRC are computed based on the curves using Scikit-learn~ \citep{scikit-learn}. Area under curves are threshold independent and convey an overall performance measurement of a program. The rest of the metrics are calculated using a binding threshold which is determined after obtaining the prediction scores from each program. Since each program's output is of different scale, for each program, we pick the threshold such that for a given testing dataset, the number of predicted scores above the threshold is equal to the real number of binding sites in the dataset. Binding site prediction is a highly imbalanced task, the area under the PR curve and MCC are better indications of the performance as it emphasises more on the minority class while ROC curve pays attention to both minority and the majority class \citep{andluis2016survey} \citep{saito2015precision}.  
 
 The formulas for calculating the metrics are as follows, where true positives ($TP$) and true negatives ($TN$) are the correctly predicted binding sites and non-binding sites, respectively, and false positives ($FP$) and false negative ($FN$) are incorrectly predicted binding sites and non-binding sites, respectively:
 \[
@@ -234,13 +264,13 @@ The formulas for calculating the metrics are as follows, where true positives ($
 \]
 
 \subsection{Comparative assessment of predictive performance}
-\subsubsection{Performance comparison on Dset\_448}
-We first compare the DELPHI model with eight programs on Dset\_448. This dataset is the most recently published and has the largest number of proteins, so we emphasize the importance of this dataset. As shown in Table \ref{tab_comp_448}, DELPHI surpasses competitors in all metrics with an improvement of 17.4\%, 18.3\%, and 3.08\% on AUPRC, MCC, and AUROC respectively comparing to the second best program SCRIBER.
+\subsubsection{Performance comparison on Dset\_448 and Dset\_355}
+We first compare the DELPHI model with eight programs on Dset\_448. This dataset is the most recently published and has the largest number of proteins, so we emphasize the importance of this dataset. As shown in Table \ref{tab_comp_448_355}, DELPHI surpasses competitors in all metrics with an improvement of 17.4\%, 18.3\%, and 3.08\% on AUPRC, MCC, and AUROC respectively comparing to the second best program SCRIBER.
 
 % \clearpage
 \begin{table}[H]
   \centering
-  \caption{Performance comparison of nine programs on Dset\_448. Programs are sorted in ascending order by AUPRC. Darker colours represent better results. The evaluation of the programs marked with ${}^*$ are carried by \citep{zhang2019scriber}.}
+  \caption{\textcolor{\myColor}{Performance comparison of nine programs on Dset\_448 and Dset\_355. Programs are sorted in ascending order by AUPRC. Darker colours represent better results. The evaluation of the programs marked with ${}^*$ are carried by \citep{zhang2019scriber}.}}
     % Table generated by Excel2LaTeX from sheet 'Sheet2'
     \begin{tabular}{@{}l@{\ }*{8}{r}}
     \toprule
@@ -248,61 +278,72 @@ We first compare the DELPHI model with eight programs on Dset\_448. This dataset
     \hline
     \multicolumn{9}{c}{Dset\_448} \\
     \hline
-    SPPIDER${}^*$ & \cellcolor[rgb]{ .933,  .953,  .922}0.202 & 0.870 & \cellcolor[rgb]{ .961,  .973,  .957}0.194 & 0.781 & \cellcolor[rgb]{ .949,  .965,  .937}0.198 & \cellcolor[rgb]{ .957,  .969,  .949}0.071 & 0.517 & 0.159 \\
-    SPRINT${}^*$ & 0.183 & \cellcolor[rgb]{ .937,  .953,  .925}0.873 & 0.183 & 0.781 & 0.183 & 0.057 & \cellcolor[rgb]{ .839,  .882,  .812}0.570 & \cellcolor[rgb]{ .973,  .98,  .965}0.167 \\
-    PSIVER${}^*$ & \cellcolor[rgb]{ .973,  .98,  .969}0.191 & \cellcolor[rgb]{ .918,  .937,  .902}0.874 & \cellcolor[rgb]{ .973,  .98,  .969}0.191 & \cellcolor[rgb]{ .973,  .98,  .969}0.783 & \cellcolor[rgb]{ .973,  .98,  .969}0.191 & \cellcolor[rgb]{ .973,  .98,  .969}0.066 & \cellcolor[rgb]{ .808,  .859,  .773}0.581 & \cellcolor[rgb]{ .961,  .973,  .953}0.170 \\
-    SPRINGS${}^*$ & \cellcolor[rgb]{ .839,  .882,  .808}0.229 & \cellcolor[rgb]{ .745,  .812,  .698}0.882 & \cellcolor[rgb]{ .843,  .886,  .812}0.228 & \cellcolor[rgb]{ .792,  .847,  .753}0.796 & \cellcolor[rgb]{ .839,  .882,  .808}0.229 & \cellcolor[rgb]{ .835,  .878,  .804}0.111 & \cellcolor[rgb]{ .675,  .761,  .612}0.625 & \cellcolor[rgb]{ .843,  .886,  .816}0.201 \\
-    LORIS${}^*$ & \cellcolor[rgb]{ .714,  .792,  .659}0.264 & \cellcolor[rgb]{ .635,  .733,  .569}0.887 & \cellcolor[rgb]{ .718,  .792,  .663}0.263 & \cellcolor[rgb]{ .667,  .757,  .604}0.805 & \cellcolor[rgb]{ .718,  .792,  .663}0.263 & \cellcolor[rgb]{ .71,  .788,  .655}0.151 & \cellcolor[rgb]{ .58,  .694,  .502}0.656 & \cellcolor[rgb]{ .741,  .812,  .694}0.228 \\
-    CRFPPI${}^*$ & \cellcolor[rgb]{ .698,  .78,  .643}0.268 & \cellcolor[rgb]{ .635,  .733,  .569}0.887 & \cellcolor[rgb]{ .714,  .792,  .659}0.264 & \cellcolor[rgb]{ .667,  .757,  .604}0.805 & \cellcolor[rgb]{ .706,  .784,  .651}0.266 & \cellcolor[rgb]{ .698,  .78,  .643}0.154 & \cellcolor[rgb]{ .502,  .635,  .412}0.681 & \cellcolor[rgb]{ .706,  .784,  .651}0.238 \\
-    SSWRF${}^*$ & \cellcolor[rgb]{ .627,  .729,  .561}0.288 & \cellcolor[rgb]{ .549,  .671,  .471}0.891 & \cellcolor[rgb]{ .635,  .733,  .569}0.286 & \cellcolor[rgb]{ .584,  .694,  .506}0.811 & \cellcolor[rgb]{ .631,  .729,  .565}0.287 & \cellcolor[rgb]{ .624,  .725,  .557}0.178 & \cellcolor[rgb]{ .482,  .624,  .388}0.687 & \cellcolor[rgb]{ .639,  .737,  .573}0.256 \\
+   SPPIDER* & \cellcolor[rgb]{ .933,  .953,  .922}0.202 & 0.870 & \cellcolor[rgb]{ .961,  .973,  .957}0.194 & 0.781 & \cellcolor[rgb]{ .949,  .965,  .937}0.198 & \cellcolor[rgb]{ .957,  .969,  .949}0.071 & 0.517 & 0.159 \\
+    SPRINT* & 0.183 & \cellcolor[rgb]{ .937,  .953,  .925}0.873 & 0.183 & 0.781 & 0.183 & 0.057 & \cellcolor[rgb]{ .839,  .882,  .812}0.570 & \cellcolor[rgb]{ .973,  .98,  .965}0.167 \\
+    PSIVER* & \cellcolor[rgb]{ .973,  .98,  .969}0.191 & \cellcolor[rgb]{ .918,  .937,  .902}0.874 & \cellcolor[rgb]{ .973,  .98,  .969}0.191 & \cellcolor[rgb]{ .973,  .98,  .969}0.783 & \cellcolor[rgb]{ .973,  .98,  .969}0.191 & \cellcolor[rgb]{ .973,  .98,  .969}0.066 & \cellcolor[rgb]{ .808,  .859,  .773}0.581 & \cellcolor[rgb]{ .961,  .973,  .953}0.170 \\
+    SPRINGS* & \cellcolor[rgb]{ .839,  .882,  .808}0.229 & \cellcolor[rgb]{ .745,  .812,  .698}0.882 & \cellcolor[rgb]{ .843,  .886,  .812}0.228 & \cellcolor[rgb]{ .792,  .847,  .753}0.796 & \cellcolor[rgb]{ .839,  .882,  .808}0.229 & \cellcolor[rgb]{ .835,  .878,  .804}0.111 & \cellcolor[rgb]{ .675,  .761,  .612}0.625 & \cellcolor[rgb]{ .843,  .886,  .816}0.201 \\
+    LORIS* & \cellcolor[rgb]{ .714,  .792,  .659}0.264 & \cellcolor[rgb]{ .635,  .733,  .569}0.887 & \cellcolor[rgb]{ .718,  .792,  .663}0.263 & \cellcolor[rgb]{ .667,  .757,  .604}0.805 & \cellcolor[rgb]{ .718,  .792,  .663}0.263 & \cellcolor[rgb]{ .71,  .788,  .655}0.151 & \cellcolor[rgb]{ .58,  .694,  .502}0.656 & \cellcolor[rgb]{ .741,  .812,  .694}0.228 \\
+    CRFPPI* & \cellcolor[rgb]{ .698,  .78,  .643}0.268 & \cellcolor[rgb]{ .635,  .733,  .569}0.887 & \cellcolor[rgb]{ .714,  .792,  .659}0.264 & \cellcolor[rgb]{ .667,  .757,  .604}0.805 & \cellcolor[rgb]{ .706,  .784,  .651}0.266 & \cellcolor[rgb]{ .698,  .78,  .643}0.154 & \cellcolor[rgb]{ .502,  .635,  .412}0.681 & \cellcolor[rgb]{ .706,  .784,  .651}0.238 \\
+    SSWRF* & \cellcolor[rgb]{ .627,  .729,  .561}0.288 & \cellcolor[rgb]{ .549,  .671,  .471}0.891 & \cellcolor[rgb]{ .635,  .733,  .569}0.286 & \cellcolor[rgb]{ .584,  .694,  .506}0.811 & \cellcolor[rgb]{ .631,  .729,  .565}0.287 & \cellcolor[rgb]{ .624,  .725,  .557}0.178 & \cellcolor[rgb]{ .482,  .624,  .388}0.687 & \cellcolor[rgb]{ .639,  .737,  .573}0.256 \\
     SCRIBER & \cellcolor[rgb]{ .463,  .608,  .365}0.334 & \cellcolor[rgb]{ .443,  .592,  .341}0.896 & \cellcolor[rgb]{ .471,  .612,  .373}0.332 & \cellcolor[rgb]{ .443,  .592,  .341}0.821 & \cellcolor[rgb]{ .467,  .612,  .369}0.333 & \cellcolor[rgb]{ .463,  .608,  .365}0.230 & \cellcolor[rgb]{ .4,  .561,  .29}0.715 & \cellcolor[rgb]{ .522,  .651,  .435}0.287 \\
     DELPHI & \cellcolor[rgb]{ .329,  .51,  .208}0.371 & \cellcolor[rgb]{ .329,  .51,  .208}0.901 & \cellcolor[rgb]{ .329,  .51,  .208}0.371 & \cellcolor[rgb]{ .329,  .51,  .208}0.829 & \cellcolor[rgb]{ .329,  .51,  .208}0.371 & \cellcolor[rgb]{ .329,  .51,  .208}0.272 & \cellcolor[rgb]{ .329,  .51,  .208}0.737 & \cellcolor[rgb]{ .329,  .51,  .208}0.337 \\
+    \midrule
+    \multicolumn{9}{c}{Dset\_355} \\
+    \midrule
+    SPPIDER & \cellcolor[rgb]{ .961,  .973,  .957}0.180 & \cellcolor[rgb]{ .949,  .965,  .941}0.889 & \cellcolor[rgb]{ .961,  .973,  .953}0.180 & \cellcolor[rgb]{ .957,  .969,  .949}0.804 & \cellcolor[rgb]{ .961,  .973,  .953}0.180 & \cellcolor[rgb]{ .961,  .973,  .953}0.068 & 0.515 & 0.138 \\
+    SPRINT & 0.168 & 0.886 & 0.167 & 0.801 & 0.168 & 0.054 & \cellcolor[rgb]{ .839,  .882,  .808}0.571 & \cellcolor[rgb]{ .961,  .973,  .953}0.150 \\
+    PSIVER & \cellcolor[rgb]{ .969,  .976,  .965}0.178 & \cellcolor[rgb]{ .965,  .976,  .957}0.888 & \cellcolor[rgb]{ .969,  .976,  .965}0.177 & \cellcolor[rgb]{ .969,  .976,  .961}0.803 & \cellcolor[rgb]{ .969,  .976,  .965}0.177 & \cellcolor[rgb]{ .969,  .976,  .965}0.065 & \cellcolor[rgb]{ .804,  .859,  .769}0.583 & \cellcolor[rgb]{ .941,  .957,  .929}0.155 \\
+    SPRINGS & \cellcolor[rgb]{ .855,  .894,  .827}0.211 & \cellcolor[rgb]{ .867,  .906,  .843}0.892 & \cellcolor[rgb]{ .859,  .898,  .831}0.210 & \cellcolor[rgb]{ .863,  .898,  .835}0.811 & \cellcolor[rgb]{ .855,  .894,  .827}0.211 & \cellcolor[rgb]{ .855,  .894,  .831}0.103 & \cellcolor[rgb]{ .733,  .804,  .682}0.608 & \cellcolor[rgb]{ .859,  .898,  .831}0.178 \\
+    LORIS & \cellcolor[rgb]{ .749,  .816,  .706}0.242 & \cellcolor[rgb]{ .769,  .831,  .725}0.896 & \cellcolor[rgb]{ .757,  .82,  .71}0.240 & \cellcolor[rgb]{ .761,  .824,  .714}0.818 & \cellcolor[rgb]{ .753,  .82,  .706}0.241 & \cellcolor[rgb]{ .753,  .82,  .71}0.137 & \cellcolor[rgb]{ .647,  .745,  .584}0.637 & \cellcolor[rgb]{ .773,  .835,  .729}0.203 \\
+    CRFPPI & \cellcolor[rgb]{ .733,  .804,  .686}0.247 & \cellcolor[rgb]{ .741,  .812,  .698}0.897 & \cellcolor[rgb]{ .737,  .808,  .69}0.245 & \cellcolor[rgb]{ .737,  .808,  .69}0.819 & \cellcolor[rgb]{ .733,  .808,  .686}0.246 & \cellcolor[rgb]{ .737,  .808,  .686}0.143 & \cellcolor[rgb]{ .573,  .69,  .498}0.662 & \cellcolor[rgb]{ .733,  .804,  .682}0.214 \\
+    SSWRF & \cellcolor[rgb]{ .663,  .753,  .6}0.268 & \cellcolor[rgb]{ .655,  .749,  .592}0.901 & \cellcolor[rgb]{ .659,  .753,  .596}0.268 & \cellcolor[rgb]{ .659,  .749,  .596}0.825 & \cellcolor[rgb]{ .659,  .753,  .6}0.268 & \cellcolor[rgb]{ .659,  .753,  .596}0.168 & \cellcolor[rgb]{ .561,  .678,  .482}0.667 & \cellcolor[rgb]{ .682,  .769,  .624}0.228 \\
+    DLPred & \cellcolor[rgb]{ .522,  .651,  .435}0.308 & \cellcolor[rgb]{ .518,  .647,  .431}0.906 & \cellcolor[rgb]{ .522,  .651,  .435}0.308 & \cellcolor[rgb]{ .514,  .647,  .427}0.835 & \cellcolor[rgb]{ .522,  .651,  .435}0.308 & \cellcolor[rgb]{ .522,  .651,  .435}0.214 & \cellcolor[rgb]{ .396,  .561,  .286}0.724 & \cellcolor[rgb]{ .525,  .655,  .439}0.272 \\
+    SCRIBER & \cellcolor[rgb]{ .475,  .616,  .38}0.322 & \cellcolor[rgb]{ .475,  .616,  .38}0.908 & \cellcolor[rgb]{ .475,  .616,  .38}0.322 & \cellcolor[rgb]{ .475,  .616,  .376}0.838 & \cellcolor[rgb]{ .475,  .616,  .38}0.322 & \cellcolor[rgb]{ .475,  .616,  .38}0.230 & \cellcolor[rgb]{ .408,  .569,  .302}0.719 & \cellcolor[rgb]{ .514,  .643,  .424}0.275 \\
+    DELPHI & \cellcolor[rgb]{ .329,  .51,  .208}0.364 & \cellcolor[rgb]{ .329,  .51,  .208}0.914 & \cellcolor[rgb]{ .329,  .51,  .208}0.364 & \cellcolor[rgb]{ .329,  .51,  .208}0.848 & \cellcolor[rgb]{ .329,  .51,  .208}0.364 & \cellcolor[rgb]{ .329,  .51,  .208}0.278 & \cellcolor[rgb]{ .329,  .51,  .208}0.746 & \cellcolor[rgb]{ .329,  .51,  .208}0.326 \\
     \end{tabular}%
-  \label{tab_comp_448}%
+  \label{tab_comp_448_355}%
 \end{table}%
 
-In order to have a more comprehensive comparison, we compare DELPHI with another recent sequence-based program, DLPred. However, the training data in DLPred has a big overlap with Dset\_448, so we removed the highly similar sequence in Dset\_448 using the protocol described in section \ref{testing_data} and produced a reduced dataset Dset\_355 which is tested in Section \ref{section_four_tests}. 
+\textcolor{\myColor}{The training dataset of the recently published program DLpred has a big overlap with Dset\_448, so we removed the highly similar sequence in Dset\_448 using the protocol described in section \ref{testing_data} and produced a reduced dataset Dset\_355. As shown in Table \ref{tab_comp_448_355}, the performance of DLPred is very similar to the second best predictor, SCRIBER.  DELPHI still surpasses the second best program by 18.5\% and 20.9\% on AUPRC and MCC.  }
 
-\subsubsection{Performance comparison on Dset\_355, Dset\_186, Dset\_164, and Dset\_72}\label{section_four_tests}
-To further compare DELPHI with other programs, we used Dset\_355 along with another three previously published datasets: Dset\_186, Dset\_164, and Dset\_72. Since DLPred and SCRIBER are the most recent programs and have been shown to outperform older programs, we compare DELPHI only with SCRIBER and DLPred on the remaining datasets. As shown in Table \ref{tab_ds355_ds186_164_72}, DELPHI clearly outperforms the competitors in all metrics on all datasets although it shares the least similarities to the testing datasets. As binding site prediction is a highly imbalanced task, the area under the PR curve and MCC are better indications of the performance as it emphasises more on the minority class and ROC curve pays attention to both minority and the majority class \citep{andluis2016survey}. The AUPRC is improved by 18.5\%, 10.0\%, 0.6\%, 10.2\% comparing to the second best program on each dataset. The improvement on MCC are 20.9\%, 18.7\%, 8.9\%, 27.7\% on each dataset. We present also the average values over Dset\_355, Dset\_186, Dset\_164, and Dset\_72 in Table \ref{tab_ds355_ds186_164_72} for each specificity value. The performance of DELPHI again surpasses all competing programs. The average AUPRC and MCC improvement are 9.7\% and 19.1\% respectively.  
+\subsubsection{Performance comparison on Dset\_186, Dset\_164, and Dset\_72}\label{section_four_tests}
+\textcolor{\myColor}{To further compare DELPHI with other programs, we used another three previously published datasets: Dset\_186, Dset\_164, and Dset\_72. Based on the availability and usability, We ran SPPIDER, PSIVER, CRFPPI, SCRIBER, DELPred, and DELPHI on them. Note that SSWRF, CRFPPI, and PSIVER use Dset\_186 as their training datasets, so these three programs are excluded on Dset\_186. As shown in Table \ref{tab_ds186_164_72}, in general, the performance rank is the very similar to the ones in Dset\_448 and Dset\_355. DELPHI clearly outperforms the competitors in all metrics on all datasets although it shares the least similarities to the testing datasets.  The AUPRC is improved by 10.0\%, 0.6\%, 10.2\% comparing to the second best program on each dataset. The improvement on MCC are 18.7\%, 8.9\%, 27.7\% on each dataset. }
+%We present also the average values over Dset\_355, Dset\_186, Dset\_164, and Dset\_72 in Table \ref{tab_ds186_164_72} for each specificity value. The performance of DELPHI again surpasses all competing programs. The average AUPRC and MCC improvement are 9.7\% and 19.1\% respectively.  
 
 \begin{table}[H]
   \centering
-  \caption{Performance comparison of SCRIBER, DLPred, and DELPHI on Dset\_355, Dset\_186, Dset\_164, and Dset\_72. Darker colours represent better results. Each dataset is tested separately using the same metrics. The average metrics of the four datasets is also shown.}
+  \caption{\textcolor{\myColor}{Performance comparison of seven program on Dset\_186, Dset\_164, and Dset\_72. Darker colours represent better results. Each dataset is tested separately using the same metrics. The average metrics of the four datasets is also shown.}}
     \begin{tabular}{@{}l@{\ }*{8}{r}}
     \toprule
     \multicolumn{1}{@{}l}{Predictor} & \multicolumn{1}{c}{$\!$Sens.} & \multicolumn{1}{c}{Spec.} & \multicolumn{1}{c}{Prec.} & \multicolumn{1}{c}{Acc.} & \multicolumn{1}{c}{F1} & \multicolumn{1}{c}{MCC} & \multicolumn{1}{c}{$\!\!\!$AUROC$\!\!\!$} & \multicolumn{1}{c@{}}{$\!$AUPRC} \\
     \hline
-    \multicolumn{9}{c}{Dset\_355} \\
-    \hline
-    SCRIBER & \cellcolor[rgb]{ .835,  .882,  .808}0.322 & \cellcolor[rgb]{ .847,  .886,  .816}0.908 & \cellcolor[rgb]{ .839,  .882,  .808}0.322 & \cellcolor[rgb]{ .847,  .89,  .82}0.838 & \cellcolor[rgb]{ .839,  .882,  .808}0.322 & \cellcolor[rgb]{ .839,  .882,  .808}0.230 & 0.719 & \cellcolor[rgb]{ .961,  .973,  .953}0.275 \\
-    DLPred & 0.308 & 0.906 & 0.308 & 0.835 & 0.308 & 0.214 & \cellcolor[rgb]{ .89,  .922,  .871}0.724 & 0.272 \\
-    DELPHI & \cellcolor[rgb]{ .329,  .51,  .208}0.364 & \cellcolor[rgb]{ .329,  .51,  .208}0.914 & \cellcolor[rgb]{ .329,  .51,  .208}0.364 & \cellcolor[rgb]{ .329,  .51,  .208}0.848 & \cellcolor[rgb]{ .329,  .51,  .208}0.364 & \cellcolor[rgb]{ .329,  .51,  .208}0.278 & \cellcolor[rgb]{ .329,  .51,  .208}0.746 & \cellcolor[rgb]{ .329,  .51,  .208}0.326 \\
-    \hline
     \multicolumn{9}{c}{Dset\_186} \\
     \hline
-    SCRIBER & 0.279 & 0.870 & 0.279 & 0.780 & 0.279 & 0.150 & 0.647 & 0.246 \\
-    DLPred & \cellcolor[rgb]{ .62,  .722,  .549}0.320 & \cellcolor[rgb]{ .631,  .729,  .565}0.878 & \cellcolor[rgb]{ .62,  .722,  .549}0.320 & \cellcolor[rgb]{ .631,  .729,  .561}0.793 & \cellcolor[rgb]{ .62,  .722,  .549}0.320 & \cellcolor[rgb]{ .62,  .722,  .553}0.198 & \cellcolor[rgb]{ .498,  .631,  .404}0.694 & \cellcolor[rgb]{ .6,  .71,  .529}0.290 \\
+    SPPIDER & \cellcolor[rgb]{ .988,  .988,  1}0.194 & \cellcolor[rgb]{ .988,  .988,  1}0.848 & \cellcolor[rgb]{ .988,  .988,  1}0.186 & \cellcolor[rgb]{ .988,  .988,  1}0.748 & \cellcolor[rgb]{ .988,  .988,  1}0.190 & \cellcolor[rgb]{ .988,  .988,  1}0.041 & \cellcolor[rgb]{ .988,  .988,  1}0.499 & \cellcolor[rgb]{ .988,  .988,  1}0.165 \\
+    SCRIBER & \cellcolor[rgb]{ .631,  .729,  .573}0.279 & \cellcolor[rgb]{ .576,  .69,  .506}0.870 & \cellcolor[rgb]{ .62,  .722,  .557}0.279 & \cellcolor[rgb]{ .604,  .71,  .537}0.780 & \cellcolor[rgb]{ .624,  .725,  .565}0.279 & \cellcolor[rgb]{ .62,  .722,  .557}0.150 & \cellcolor[rgb]{ .529,  .655,  .447}0.647 & \cellcolor[rgb]{ .643,  .741,  .588}0.246 \\
+    DLPred & \cellcolor[rgb]{ .459,  .604,  .365}0.320 & \cellcolor[rgb]{ .439,  .592,  .341}0.878 & \cellcolor[rgb]{ .455,  .6,  .357}0.320 & \cellcolor[rgb]{ .451,  .6,  .357}0.793 & \cellcolor[rgb]{ .459,  .604,  .361}0.320 & \cellcolor[rgb]{ .455,  .604,  .361}0.198 & \cellcolor[rgb]{ .38,  .549,  .267}0.694 & \cellcolor[rgb]{ .459,  .604,  .361}0.290 \\
     DELPHI & \cellcolor[rgb]{ .329,  .51,  .208}0.351 & \cellcolor[rgb]{ .329,  .51,  .208}0.884 & \cellcolor[rgb]{ .329,  .51,  .208}0.351 & \cellcolor[rgb]{ .329,  .51,  .208}0.803 & \cellcolor[rgb]{ .329,  .51,  .208}0.351 & \cellcolor[rgb]{ .329,  .51,  .208}0.235 & \cellcolor[rgb]{ .329,  .51,  .208}0.710 & \cellcolor[rgb]{ .329,  .51,  .208}0.319 \\
-    \hline
+    \midrule
     \multicolumn{9}{c}{Dset\_164} \\
-    \hline
-    SCRIBER & 0.327 & 0.851 & 0.327 & 0.756 & 0.327 & 0.179 & 0.657 & 0.301 \\
-    DLPred & \cellcolor[rgb]{ .714,  .792,  .663}0.338 & \cellcolor[rgb]{ .71,  .788,  .659}0.854 & \cellcolor[rgb]{ .714,  .792,  .663}0.338 & \cellcolor[rgb]{ .714,  .788,  .659}0.760 & \cellcolor[rgb]{ .714,  .792,  .663}0.338 & \cellcolor[rgb]{ .714,  .792,  .663}0.192 & \cellcolor[rgb]{ .635,  .733,  .569}0.672 & \cellcolor[rgb]{ .365,  .537,  .251}0.330 \\
+    \midrule
+    SPPIDER & \cellcolor[rgb]{ .761,  .824,  .729}0.264 & \cellcolor[rgb]{ .949,  .961,  .953}0.828 & \cellcolor[rgb]{ .812,  .859,  .788}0.253 & \cellcolor[rgb]{ .859,  .894,  .843}0.726 & \cellcolor[rgb]{ .788,  .843,  .757}0.258 & \cellcolor[rgb]{ .804,  .855,  .776}0.090 & \cellcolor[rgb]{ .988,  .988,  1}0.528 & \cellcolor[rgb]{ .914,  .933,  .91}0.220 \\
+    PSIVER & \cellcolor[rgb]{ .988,  .988,  1}0.217 & \cellcolor[rgb]{ .988,  .988,  1}0.826 & \cellcolor[rgb]{ .988,  .988,  1}0.216 & \cellcolor[rgb]{ .988,  .988,  1}0.716 & \cellcolor[rgb]{ .988,  .988,  1}0.216 & \cellcolor[rgb]{ .988,  .988,  1}0.043 & \cellcolor[rgb]{ .878,  .91,  .867}0.554 & \cellcolor[rgb]{ .988,  .988,  1}0.205 \\
+    SSWRF & \cellcolor[rgb]{ .753,  .816,  .714}0.266 & \cellcolor[rgb]{ .741,  .808,  .702}0.838 & \cellcolor[rgb]{ .749,  .816,  .714}0.266 & \cellcolor[rgb]{ .745,  .812,  .71}0.734 & \cellcolor[rgb]{ .749,  .816,  .714}0.266 & \cellcolor[rgb]{ .749,  .816,  .714}0.103 & \cellcolor[rgb]{ .663,  .753,  .608}0.606 & \cellcolor[rgb]{ .796,  .847,  .769}0.243 \\
+    CRFPPI & \cellcolor[rgb]{ .682,  .769,  .631}0.280 & \cellcolor[rgb]{ .675,  .761,  .62}0.841 & \cellcolor[rgb]{ .682,  .765,  .631}0.280 & \cellcolor[rgb]{ .678,  .765,  .627}0.739 & \cellcolor[rgb]{ .682,  .765,  .631}0.280 & \cellcolor[rgb]{ .682,  .765,  .631}0.121 & \cellcolor[rgb]{ .655,  .745,  .596}0.608 & \cellcolor[rgb]{ .667,  .757,  .612}0.267 \\
+    SCRIBER & \cellcolor[rgb]{ .451,  .6,  .353}0.327 & \cellcolor[rgb]{ .451,  .596,  .353}0.851 & \cellcolor[rgb]{ .451,  .6,  .353}0.327 & \cellcolor[rgb]{ .451,  .6,  .353}0.756 & \cellcolor[rgb]{ .451,  .6,  .353}0.327 & \cellcolor[rgb]{ .451,  .6,  .353}0.179 & \cellcolor[rgb]{ .451,  .596,  .353}0.657 & \cellcolor[rgb]{ .49,  .627,  .4}0.301 \\
+    DLPred & \cellcolor[rgb]{ .4,  .561,  .294}0.338 & \cellcolor[rgb]{ .4,  .561,  .29}0.854 & \cellcolor[rgb]{ .4,  .561,  .29}0.338 & \cellcolor[rgb]{ .4,  .561,  .29}0.760 & \cellcolor[rgb]{ .4,  .561,  .294}0.338 & \cellcolor[rgb]{ .4,  .561,  .29}0.192 & \cellcolor[rgb]{ .384,  .549,  .275}0.672 & \cellcolor[rgb]{ .341,  .518,  .22}0.330 \\
     DELPHI & \cellcolor[rgb]{ .329,  .51,  .208}0.352 & \cellcolor[rgb]{ .329,  .51,  .208}0.857 & \cellcolor[rgb]{ .329,  .51,  .208}0.352 & \cellcolor[rgb]{ .329,  .51,  .208}0.765 & \cellcolor[rgb]{ .329,  .51,  .208}0.352 & \cellcolor[rgb]{ .329,  .51,  .208}0.209 & \cellcolor[rgb]{ .329,  .51,  .208}0.685 & \cellcolor[rgb]{ .329,  .51,  .208}0.332 \\
-    \hline
+    \midrule
     \multicolumn{9}{c}{Dset\_72} \\
-    \hline
-    SCRIBER & 0.232 & \cellcolor[rgb]{ .612,  .718,  .541}0.909 & 0.232 & \cellcolor[rgb]{ .635,  .733,  .569}0.837 & 0.232 & 0.141 & 0.680 & 0.198 \\
-    DLPred & \cellcolor[rgb]{ .776,  .839,  .737}0.246 & 0.901 & \cellcolor[rgb]{ .776,  .839,  .737}0.246 & 0.826 & \cellcolor[rgb]{ .776,  .839,  .737}0.246 & \cellcolor[rgb]{ .91,  .937,  .894}0.148 & \cellcolor[rgb]{ .82,  .867,  .784}0.688 & \cellcolor[rgb]{ .706,  .784,  .651}0.215 \\
+    \midrule
+    SPPIDER & \cellcolor[rgb]{ .8,  .851,  .773}0.188 & \cellcolor[rgb]{ .988,  .988,  1}0.898 & \cellcolor[rgb]{ .843,  .882,  .827}0.179 & \cellcolor[rgb]{ .925,  .945,  .925}0.823 & \cellcolor[rgb]{ .824,  .867,  .8}0.183 & \cellcolor[rgb]{ .835,  .878,  .816}0.084 & \cellcolor[rgb]{ .988,  .988,  1}0.522 & \cellcolor[rgb]{ .988,  .988,  1}0.134 \\
+    PSIVER & \cellcolor[rgb]{ .988,  .988,  1}0.152 & \cellcolor[rgb]{ .937,  .953,  .937}0.899 & \cellcolor[rgb]{ .988,  .988,  1}0.152 & \cellcolor[rgb]{ .988,  .988,  1}0.820 & \cellcolor[rgb]{ .988,  .988,  1}0.152 & \cellcolor[rgb]{ .988,  .988,  1}0.052 & \cellcolor[rgb]{ .706,  .784,  .659}0.604 & \cellcolor[rgb]{ .941,  .957,  .945}0.141 \\
+    CRFPPI & \cellcolor[rgb]{ .475,  .616,  .384}0.248 & \cellcolor[rgb]{ .478,  .62,  .388}0.911 & \cellcolor[rgb]{ .475,  .616,  .384}0.248 & \cellcolor[rgb]{ .49,  .627,  .4}0.840 & \cellcolor[rgb]{ .475,  .616,  .384}0.248 & \cellcolor[rgb]{ .478,  .616,  .384}0.158 & \cellcolor[rgb]{ .475,  .616,  .384}0.669 & \cellcolor[rgb]{ .565,  .682,  .49}0.200 \\
+    SSWRF & \cellcolor[rgb]{ .482,  .624,  .392}0.246 & \cellcolor[rgb]{ .486,  .624,  .396}0.911 & \cellcolor[rgb]{ .482,  .624,  .392}0.246 & \cellcolor[rgb]{ .498,  .635,  .412}0.840 & \cellcolor[rgb]{ .482,  .624,  .392}0.246 & \cellcolor[rgb]{ .486,  .624,  .396}0.157 & \cellcolor[rgb]{ .447,  .596,  .349}0.678 & \cellcolor[rgb]{ .576,  .69,  .506}0.198 \\
+    SCRIBER & \cellcolor[rgb]{ .557,  .675,  .482}0.232 & \cellcolor[rgb]{ .553,  .671,  .475}0.909 & \cellcolor[rgb]{ .557,  .675,  .482}0.232 & \cellcolor[rgb]{ .569,  .686,  .498}0.837 & \cellcolor[rgb]{ .557,  .675,  .482}0.232 & \cellcolor[rgb]{ .557,  .678,  .482}0.141 & \cellcolor[rgb]{ .439,  .592,  .341}0.680 & \cellcolor[rgb]{ .576,  .69,  .506}0.198 \\
+    DLPred & \cellcolor[rgb]{ .482,  .62,  .392}0.246 & \cellcolor[rgb]{ .859,  .894,  .843}0.901 & \cellcolor[rgb]{ .482,  .62,  .388}0.246 & \cellcolor[rgb]{ .855,  .894,  .839}0.826 & \cellcolor[rgb]{ .482,  .62,  .388}0.246 & \cellcolor[rgb]{ .529,  .655,  .447}0.148 & \cellcolor[rgb]{ .412,  .569,  .306}0.688 & \cellcolor[rgb]{ .467,  .612,  .373}0.215 \\
     DELPHI & \cellcolor[rgb]{ .329,  .51,  .208}0.274 & \cellcolor[rgb]{ .329,  .51,  .208}0.914 & \cellcolor[rgb]{ .329,  .51,  .208}0.274 & \cellcolor[rgb]{ .329,  .51,  .208}0.847 & \cellcolor[rgb]{ .329,  .51,  .208}0.274 & \cellcolor[rgb]{ .329,  .51,  .208}0.189 & \cellcolor[rgb]{ .329,  .51,  .208}0.711 & \cellcolor[rgb]{ .329,  .51,  .208}0.237 \\
-    \hline
-    \multicolumn{9}{c}{Average} \\
-    \hline
-    SCRIBER & 0.290 & 0.885 & 0.290 & 0.803 & 0.290 & 0.175 & 0.676 & 0.255 \\
-    DLPred & \cellcolor[rgb]{ .812,  .863,  .776}0.303 & \cellcolor[rgb]{ .992,  .992,  .988}0.885 & \cellcolor[rgb]{ .808,  .859,  .773}0.303 & \cellcolor[rgb]{ .976,  .984,  .973}0.803 & \cellcolor[rgb]{ .808,  .863,  .773}0.303 & \cellcolor[rgb]{ .835,  .882,  .804}0.188 & \cellcolor[rgb]{ .659,  .753,  .6}0.695 & \cellcolor[rgb]{ .702,  .784,  .647}0.277 \\
-    DELPHI & \cellcolor[rgb]{ .329,  .51,  .208}0.335 & \cellcolor[rgb]{ .329,  .51,  .208}0.892 & \cellcolor[rgb]{ .329,  .51,  .208}0.335 & \cellcolor[rgb]{ .329,  .51,  .208}0.816 & \cellcolor[rgb]{ .329,  .51,  .208}0.335 & \cellcolor[rgb]{ .329,  .51,  .208}0.227 & \cellcolor[rgb]{ .329,  .51,  .208}0.713 & \cellcolor[rgb]{ .329,  .51,  .208}0.304 \\
-\label{tab_ds355_ds186_164_72}
+\label{tab_ds186_164_72}
     \end{tabular}%
 \end{table}%
 
@@ -318,17 +359,18 @@ We conducted an another experiment to show that all twelve feature are necessary
 
 \begin{figure}
 \centering
-\includegraphics[width=\columnwidth]{remove_features_individually_Testing.pdf}
+\includegraphics[width=\columnwidth, height=5cm]{remove_features_individually_Testing.pdf}
   \caption{\textbf{The areas under PR curves with the removal of one out of the twelve features on Dset\_448.} One feature is removed each time, and the DELPHI model is trained, validated, and tested using the remaining eleven features. The x-axis shows the removed features where 'None' indicates using all twelve features, and the y-axis is the AUPR achieved. The features are sorted by the AUPR values. 
   \label{fig_remove_each_feature}}
 \end{figure}
 
-\subsubsection{Ensemble architecture evaluation}
-To show the ensemble architecture improves the performance, we evaluated the CNN, RNN, and the ensemble model separately on Dset\_448. As discussed in Section \ref{section_ensemble}, the CNN and RNN components are trained independently first, then the weighs of the convolution and the GRU layer are loaded into the ensemble model. As shown in Fig. \ref{fig_CNN_RNN_ensemble}, we plotted  AUPRC and MCC which are considered the best metrics for evaluating imbalanced dataset. First, It is clear that the ensemble model outperforms the individual CNN and RNN model. Also, the RNN component shows better performance the the CNN component which could be an indication that biological data better fits the RNN's ability of memorizing sequential information.
+\textcolor{\myColor}{
+\subsubsection{The evaluation of the model architecture and the novel features}
+To show that the ensemble architecture and the three novel features improve the performance, we evaluated the CNN, RNN, and the ensemble model separately on Dset\_448 with and without the three new features, of total six tests. As discussed in Section \ref{section_ensemble}, for each feature set, the CNN and RNN components are trained independently first, then the weighs of the convolution and the GRU layer are loaded into the ensemble model. As shown in Fig. \ref{fig_CNN_RNN_ensemble}, we plotted the value of AUPRC and MCC of the six tests. First, It is clear that the ensemble model outperforms the individual CNN and RNN model. Second, the employment of the three new features improves the performance further more. The RNN component shows better performance than the the CNN component which could be an indication that biological data better fits the RNN's ability of memorizing sequential information. Overall, the new features contributes to the performance improvement more than the model architecture. }
 \begin{figure}
 \centering
-\includegraphics[width=7cm,height=3cm]{CNN_RNN_ensemble.pdf}
-  \caption{\textbf{The evaluation of the DELPHI model architecture.} The area under PR curves (left) and MCC (right) of the CNN, RNN, and the ensemble model on Dset\_448 are plotted.
+\includegraphics[width=\columnwidth, height = 4cm]{CNN_RNN_ensemble.pdf}
+  \caption{\textcolor{\myColor}{{The evaluation of the DELPHI model architecture and the three novel features.} The area under PR curves (left) and MCC (right) are plotted separately. Each plot contains the performance of using CNN, RNN, and the ensemble model on Dset\_448. Two different colors indicate with and without the three new features.}
   \label{fig_CNN_RNN_ensemble}}
 \end{figure}
 
@@ -351,7 +393,7 @@ We hope in the future, the model architecture, the usage of the three new featur
 %   \label{fig_ROC_PR}
 % \end{figure*}
 \section*{Acknowledgements}
-We would like to thank Jian Zhang and Buzhong Zhang for running their programs on some of the testing datasets as well as the insightful information they provided regarding SCRIBER and DLPred, Giancarlo Colmenare for suggestions on tuning the network, Min Zeng for the explanation on DeepPPISP, and Tanner Bohn for suggesting using the position information.
+We would like to thank Jian Zhang for running SCRIBER on the testing datasets, providing the prediction results of competing methods on Dset\_448 and Dset\_355, and discussing technical details. We would also like to thank Buzhong Zhang for running DLPred on Dset\_448, Giancarlo Colmenare for suggestions on tuning the network, Min Zeng for the explanation on DeepPPISP, Alexey Porollo for providing the script for summiting batch jobs to the SPPIDER server, and Tanner Bohn for suggesting using the position information.
 
 \section*{Funding}
 The research of L.I. is funded by a Discovery Grant (R3143A01) and a Research Tools and Instruments Grant (R3143A07) from the Natural Sciences and Engineering Research Council of Canada.
