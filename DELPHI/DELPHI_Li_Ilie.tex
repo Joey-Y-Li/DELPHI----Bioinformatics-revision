@@ -4,7 +4,7 @@
 \usepackage{booktabs}
 \usepackage[table]{xcolor}
 \usepackage{float}
-\newcommand{\myColor}{red}
+\newcommand{\myColor}{black}
 \access{Advance Access Publication Date: Day Month Year}
 \appnotes{Manuscript Category}
 
@@ -55,7 +55,7 @@ First, a novel fine tuned ensemble model combing CNN and RNN is constructed. Sec
 \subsubsection{Testing datasets}\label{testing_data}
 \textcolor{\myColor}{In order to be able to test on common benchmark data, we choose first the testing datasets, then construct the training datasets such that they are highly dissimilar with testing.}
 
-\textcolor{\myColor}{Five datasets are used in the comparative assessment. We name them by the size of the data: Dset\_186, Dset\_72, Dset\_164, Dset\_448, and Dset\_355. The first four are publicly available dataset from previous studies \citep{murakami2010applying} \citep{dhole2014sequence} \citep{zhang2019scriber}, and the last one, Dset\_355, is a subset of Dset\_448. Dset\_186, Dset\_72, Dset\_164 have been widely used and explored as benchmark datasets by numerous publications; Dset\_448 is more recent.} 
+\textcolor{\myColor}{Five datasets are used in the comparative assessment. We name them by the size of the data: Dset\_186, Dset\_72, Dset\_164, Dset\_448, and Dset\_355. The first four are publicly available datasets from previous studies \citep{murakami2010applying} \citep{dhole2014sequence} \citep{zhang2019scriber}, and the last one, Dset\_355, is a subset of Dset\_448. Dset\_186, Dset\_72, Dset\_164 have been widely used and explored as benchmark datasets by numerous publications; Dset\_448 is more recent.} 
 
 \textcolor{\myColor}{
 Dset\_186 and Dset\_72 were constructed by \cite{murakami2010applying}. Dset\_186 was built based on a PDB collection \citep{berman2002protein}, to which a six-step filtering process was applied to refine the data including removing structures with missing residues, removing chains with the same UniprotKB/Swiss-Prot accession, removing transmembrane proteins, removing dimeric structures, removing proteins with buried surface accessibility and interface polarity under certain range, and similarities elimination. Dset\_72 was constructed based on the protein-protein benchmark set version 3.0 \citep{hwang2008protein} with the similarities with Dset\_186 removed.
@@ -157,8 +157,6 @@ After computing all the feature vectors, the values in in each row vector are no
 v_\text{norm}=\dfrac{v-\text{min}}{\text{max}-\text{min}}\label{eq_normalized}
 \end{equation}
 \textcolor{\myColor}{The feature computation details, including program versions, parameters, and commands used can be found in the Supplementary material.}
-
-
 
 \subsection{Model architecture}
 DELPHI has an architecture that is inspired by ensemble learning. The intuition of the design is that different components of the model capture different information, and another deep neural network is trained to only select the most useful ones. As shown in Fig. \ref{fig_architecture}, the model consists of three parts, a convolutional neural network (CNN) component, an recurrent neural network (RNN) component, and an ensemble component. The core layers of the CNN and RNN components are convolution and bidirectional gated recurrent units (GRU) layers. The ensemble model decodes the output of the first two components.  
