@@ -16,10 +16,10 @@
 
 \title[Protein interaction sites prediction]{DELPHI: accurate deep ensemble model for protein interaction sites prediction}
 \author[Y.Li et al.]{Yiwei Li\,$^1$, 
-\textcolor{\mySecondColor}{Brian Golding\,$^2$}
+\textcolor{\mySecondColor}{G.~Brian Golding\,$^2$}
  and Lucian Ilie\,$^{1,*}$}
-\address{$^1$Department of Computer Science, The University of Western Ontario London, ON, N6A 5B7, Canada \textcolor{\mySecondColor}{and $^2$Department of Biology, McMaster University, Hamilton, Ontario, Canada}
-L8S 4K1}
+\address{$^1$Department of Computer Science, The University of Western Ontario London, ON, N6A 5B7, Canada \textcolor{\mySecondColor}{and $^2$Department of Biology, McMaster University, Hamilton, Ontario, Canada
+L8S 4K1}}
 
 \corresp{$^\ast$To whom correspondence should be addressed: \texttt{ilie@uwo.ca}}
 
@@ -29,7 +29,7 @@ L8S 4K1}
 
 \abstract{\textbf{Motivation:} Proteins usually perform their functions by interacting with other proteins, which is why accurately predicting protein-protein interaction (PPI) binding sites is a fundamental problem. Experimental methods are slow and expensive. Therefore, great efforts are being made towards increasing the performance of computational methods.\\
 \textbf{Results:} We propose DELPHI (DEep Learning Prediction of Highly probable protein Interaction sites), a new sequence-based deep learning suite for PPI binding sites prediction. DELPHI has an ensemble structure which combines a CNN and a RNN component with fine tuning technique. Three novel features, HSP, position information, and ProtVec are used in addition to nine existing ones. \textcolor{\myColor}{We comprehensively compare DELPHI to nine state-of-the-art programs on five datasets, and DELPHI outperforms the competing methods in all metrics even though its training dataset shares the least similarities with the testing datasets. In the most important metrics, AUPRC and MCC, it surpasses the second best programs by as much as 18.5\% and 27.7\%, resp. We also demonstrated that the improvement is essentially due to using the ensemble model and, especially, the three new features.} \\
-\textbf{Availability:} \textcolor{\mySecondColor}{ The DELPHI web server, datasets, and results of in this study are freely available at\\ \texttt{https://www.csd.uwo.ca/\textasciitilde{}yli922/index.php}.\\
+\textbf{Availability:} \textcolor{\mySecondColor}{ The DELPHI web server, datasets, and results of in this study are freely available at\\ \texttt{www.csd.uwo.ca/\textasciitilde{}yli922/index.php}.\\
 The trained models, the DELPHI standalone source code, and the feature computation pipeline are freely available at \texttt{github.com/lucian-ilie/DELPHI}.} \\
 \textbf{Contact:} \href{ilie@uwo.ca}{ilie@uwo.ca}\\
 \textbf{Supplementary information:} Supplementary data are available at \textit{Bioinformatics}
@@ -297,6 +297,7 @@ We first compare the DELPHI model with eight programs on Dset\_448. This dataset
     SCRIBER & 0.322 & 0.908 & 0.322 & 0.838 & 0.322 & 0.230 & 0.719 & 0.275 \\
     DLPred & 0.308 & 0.906 & 0.308 & 0.835 & 0.308 & 0.214 & 0.724 & 0.272 \\
     DELPHI & \textbf{0.364} & \textbf{0.914} & \textbf{0.364} & \textbf{0.848} & \textbf{0.364} & \textbf{0.278} & \textbf{0.746} & \textbf{0.326} \\
+    \hline
     \end{tabular}%
   \label{tab_comp_448_355}%
 \end{table}%
@@ -318,12 +319,13 @@ To show that the ensemble architecture and the three novel features improve the 
 \subsubsection{Other explorations}
 We also tried some other ideas that could be potentially interesting, such as representing the protein sequence with one-hot embedding or the original 100 dimensional ProtVec. Unfortunately the results did not surpass the existing sequence representation. Under-sampling non-binding residuals and over-sampling binding residuals resulted in unstable performance, related to the ratio of the testing datasets. For example the prediction on the highest binding residue ratio Dset\_164 was improved by the sampling methods but not on other datasets. Attention mechanism also failed to improve the results. In terms of the network architecture, LSTM, 1D convolution, and combining the CNN and RNN network without training them separately have been tested. In the end we picked the reported architecture empirically. 
 
-\subsection{Software availability}
-\textcolor{\mySecondColor}{
-The DELPHI is open sourced as a standalone software under the GPLv3 License. The trained model, source code, and data processing pipeline are freely available at \texttt{github.com/lucian-ilie/DELPHI}. }
+\subsection{\textcolor{\mySecondColor}{++++ Biology ++++}}
 
-\textcolor{\mySecondColor}{DELPHI is also available as a web server at\\ \texttt{https://www.csd.uwo.ca/\textasciitilde{}yli922/index.php}.
-The web server facilitates users without programming skills. The user can input protein sequences and receive the prediction results via email. The PSSMs of all proteins in the testing datasets as well as the human proteome are pre-computed on the server, so they are relatively faster.
+\textcolor{\mySecondColor}{++++ Brian's ++++}
+
+\subsection{Software availability}
+\textcolor{\mySecondColor}{DELPHI is available both as a open sourced standalone software under the GPLv3 License and web server. The trained model, source code, and data processing pipeline are freely available at \texttt{github.com/lucian-ilie/DELPHI}. The web server is at  \texttt{www.csd.uwo.ca/\textasciitilde{}yli922/index.php}.
+It facilitates using without programming skills. The user can input protein sequences and receive the prediction results via email. The PSSMs of all proteins in the testing datasets as well as the human proteome are pre-computed on the server, so they are relatively faster.
 }
 \begin{table}[H]
   \centering
@@ -359,6 +361,7 @@ The web server facilitates users without programming skills. The user can input 
     SCRIBER & 0.232 & 0.909 & 0.232 & 0.837 & 0.232 & 0.141 & 0.680 & 0.198 \\
     DLPred & 0.246 & 0.901 & 0.246 & 0.826 & 0.246 & 0.148 & 0.688 & 0.215 \\
     DELPHI & \textbf{0.274} & \textbf{0.914} & \textbf{0.274} & \textbf{0.847} & \textbf{0.274} & \textbf{0.189} & \textbf{0.711} & \textbf{0.237} \\
+    \hline
 \label{tab_ds186_164_72}
     \end{tabular}%
 \end{table}%
@@ -393,7 +396,7 @@ We hope that in the future, the model architecture, the usage of the three new f
 We would like to thank Jian Zhang for running SCRIBER on the testing datasets, providing the prediction results of competing methods on Dset\_448 and Dset\_355, and discussing technical details, Buzhong Zhang for running DLPred on Dset\_448, Giancarlo Colmenare for suggestions on tuning the network, Min Zeng for the explanation on DeepPPISP, Alexey Porollo for providing the script for summiting batch jobs to the SPPIDER server, and Tanner Bohn for suggesting using the position information.
 
 \section*{Funding}
-The research of L.I. is funded by a Discovery Grant (R3143A01) and a Research Tools and Instruments Grant (R3143A07) from the Natural Sciences and Engineering Research Council of Canada.
+The research of L.I. is funded by a Discovery Grant (R3143A01) and a Research Tools and Instruments Grant (R3143A07) from the Natural Sciences and Engineering Research Council of Canada. \textcolor{\mySecondColor}{++++ Brian's funding ++++}
 
 %reference
 \bibliographystyle{natbib}
