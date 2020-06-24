@@ -321,27 +321,55 @@ We also tried some other ideas that could be potentially interesting, such as re
 
 \subsection{\textcolor{\mySecondColor}{++++ Biology ++++}}
 
-\textcolor{\mySecondColor}{++++ Brian's ++++}
+\textcolor{\mySecondColor}{We analyzed three different proteins.  These are the transcription factor SH2D2A (399 amino acids in length), the alpha-subunit of the haemoglobin protein (142 amino acids in length) and the SRY protein (204 amino acids
+in length).}
 
-We analyzed three distinct proteins.  These are the transcription factor
-SH2D2A (399 amino acids in length), the alpha globin protein (142
-amino acids in length) and the human SRY protein (204 amino acids in length).
+\textcolor{\mySecondColor}{For each protein, BLASTP was used to search for homologues.  The search was restricted to the refseq\_protein database to ensure good quality and
+to proteins from mammalian organisms.  The SH2D2A sequences were further
+limited to isoform X1 and the haemoglobins sequences were restricted to
+proteins labelled as alpha subunits.  Sequences were aligned with MUSCLE
+\citep{edgar2004muscle} and any sequences with unusually long protein distances
+were further eliminated by hand.}
 
-For each protein, BLASTP was used to search for homologues.  The search
-was restricted to refseq\_protein and to proteins from mammalian organisms.
-The SH2D2A sequences were further limited to isoform X1 and the alpha
-globins sequences were restricted to proteins labelled as alpha subunits.
-Sequences were aligned with MUSCLE \cite{Edga:04} 
-%PMID 15034147 
-and any sequences with unusually long protein distances were further
-eliminated by hand.
+\textcolor{\mySecondColor}{This resulted in 66 homologous SH2D2A sequences, 178 homologous alpha
+subunit haemoglobin sequences and 40 homolgous SRY sequences.  For each
+site in the alignment of these proteins, the frequency of the most
+conserved amino acid was recorded and compared to the PPI predicted by
+DELPHI in Figure x.  There are gaps in these figures since only aligned
+sites present in more than 10 taxa were included in this comparison.}
 
-This resulted in 66 homologous SH2D2A2 sequences, 99/178 homologous
-alpha globin sequences and 40 homolgous SRY sequences.  For each site in
-the alignment of these proteins, the Shannon diversity and the frequency
-of the most conserved amino acid was recorded and compared to the PPI
-predicted by DELPHI.  Only aligned sites present in more than 10 taxa
-were included in this comparison.
+\textcolor{\mySecondColor}{In general, Figure x.a and Figure x.c shows that the locations where
+DELPHI predicted a high probability of a protein-protein interaction are
+also the sites with a high degree of sequence conservation.  As expected
+this correlation is not perfect since sequence conservation can occur
+for many reasons other than PPI.  It will also be noted that the overall
+degree of conservation in Figure x.a for the alpha haemoglobin proteins is
+much more conserved than for the other two proteins and is an indication
+that these proteins are evolving slower.  Still PPI has a high probability
+around 130aa, 185aa and 240aa but has a lower probability at the sites
+around 175aa.  Similarly for sites around 350aa and 500aa in Figure x.c
+(protein SH2D2A) the PPI is low but the level of conservation is high.}
+
+\textcolor{\mySecondColor}{The protein SRY in Figure x.b binds to sites in the DNA rather
+than to other proteins or internally.  This is the reason for the
+high conservation around 190aa to 260aa.  Except for two sites the
+probabilities predicted by DELPHI fluctuate around low values.}
+
+\textcolor{\mySecondColor}{In general the data in Figure x show that sites with a high probability
+of PPI have a high degree of sequence conservation and indicate good
+support for the validity of the method.  The opposite is not true.
+Sequence conservation can occur for reasons other than the requirement
+that the sites are constrained by protein-protein interactions.}
+
+%----------------------------------------------------------------------
+
+\textcolor{\mySecondColor}{Caption Figure x: Three proteins were evaluated to compare the PPI
+predicted by DELPHI (orange) with the degree of site-by-site conservation
+(blue).  Only sites represented in ten or more taxa are included resulting
+in some apparent gaps.  The proteins are (a) alpha haemoglobin, (b) SRY
+and (c) SH2D2A.}
+
+
 
 
 % According to the databases the interaction sites are ...
@@ -371,44 +399,12 @@ were included in this comparison.
 % 
 % These sites should be conserved but might not show PPI.
 % 
-% 
-% 
-% 
-% 
-% 
-% @article{Edga:04,
-%     AUTHOR   = {Edgar, R.C.},
-%     TITLE    = {{MUSCLE: multiple sequence alignment with high accuracy and high throughput}},
-%     JOURNAL  = {Nucleic Acids Res},
-%     YEAR     = {2004},
-%     VOLUME   = {32},
-%     PAGES    = {1792-1797},
-%     ABSTRACT = {We describe MUSCLE, a new computer program for creating multiple alignments of
-% protein sequences. Elements of the algorithm include fast distance estimation
-% using kmer counting, progressive alignment using a new profile function we call
-% the log-expectation score, and refinement using tree-dependent restricted
-% partitioning. The speed and accuracy of MUSCLE are compared with T-Coffee, MAFFT 
-% and CLUSTALW on four test sets of reference alignments: BAliBASE, SABmark, SMART 
-% and a new benchmark, PREFAB. MUSCLE achieves the highest, or joint highest, rank 
-% in accuracy on each of these sets. Without refinement, MUSCLE achieves average
-% accuracy statistically indistinguishable from T-Coffee and MAFFT, and is the
-% fastest of the tested methods for large numbers of sequences, aligning 5000
-% sequences of average length 350 in 7 min on a current desktop computer. The
-% MUSCLE program, source code and PREFAB test data are freely available at
-% http://www.drive5. com/muscle.},
-%     AUADDR   = {bob@drive5.com},
-%     PMID     = {15034147},
-%     URL      = {https://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed&cmd=Retrieve&dopt=Citation&list_uids=15034147},
-%     DOI      = {10.1093/nar/gkh340}
-% }
-% 
-
-
+%
 
 
 \subsection{Software availability}
 \textcolor{\mySecondColor}{DELPHI is available both as a open sourced standalone software under the GPLv3 License and web server. The trained model, source code, and data processing pipeline are freely available at \texttt{github.com/lucian-ilie/DELPHI}. The web server is at  \texttt{www.csd.uwo.ca/\textasciitilde{}yli922/index.php}.
-It facilitates use without programming skills. The user can input protein sequences and receive the prediction results via email. The PSSMs of all proteins in the testing datasets as well as the human proteome are pre-computed on the server, so they are relatively faster.
+It facilitates use without programming skills. The user can input protein sequences and receive the prediction results via email. The PSSMs of all proteins in the testing datasets as well as the human proteome are pre-computed on the server, so they are relatively faster. For a protein without pre-computed PSSM, of length 500, the average computation time on the web server is 15 minutes. 
 }
 \begin{table}[H]
   \centering
@@ -479,7 +475,7 @@ We hope that in the future, the model architecture, the usage of the three new f
 We would like to thank Jian Zhang for running SCRIBER on the testing datasets, providing the prediction results of competing methods on Dset\_448 and Dset\_355, and discussing technical details, Buzhong Zhang for running DLPred on Dset\_448, Giancarlo Colmenare for suggestions on tuning the network, Min Zeng for the explanation on DeepPPISP, Alexey Porollo for providing the script for summiting batch jobs to the SPPIDER server, and Tanner Bohn for suggesting using the position information.
 
 \section*{Funding}
-The research of L.I. is funded by a Discovery Grant (R3143A01) and a Research Tools and Instruments Grant (R3143A07) from the Natural Sciences and Engineering Research Council of Canada. \textcolor{\mySecondColor}{The research of GBG is funded by an NSERC Discovery Grant RGPIN-2020-05733.}
+The research of L.I. is funded by an NSERC Discovery Grant (R3143A01) and a Research Tools and Instruments Grant (R3143A07). \textcolor{\mySecondColor}{The research of G.B.G. is funded by an NSERC Discovery Grant RGPIN-2020-05733.}
 
 %reference
 \bibliographystyle{natbib}
