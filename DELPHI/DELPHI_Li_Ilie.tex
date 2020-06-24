@@ -1,4 +1,3 @@
-
 \documentclass{bioinfo}
 \copyrightyear{2015} \pubyear{2015}
 \usepackage{url}
@@ -301,111 +300,6 @@ We first compare the DELPHI model with eight programs on Dset\_448. This dataset
     \end{tabular}%
   \label{tab_comp_448_355}%
 \end{table}%
-
-
-\textcolor{\myColor}{
-DELPHI clearly outperforms the competitors in all metrics on all datasets although it shares the least similarities to the testing datasets.  The AUPRC is improved by 10.0\%, 0.6\%, 10.2\% comparing to the second best program on each dataset. The improvement on MCC are 18.7\%, 8.9\%, 27.7\% on each dataset. 
-}
-
-\subsection{Ablation study}
-
-\subsubsection{Feature evaluation}
-We conducted an experiment to show that all twelve feature are useful. We pruned one feature each time, and the remaining eleven features are used to train and then evaluate the DELPHI model. As shown in Fig. \ref{fig_remove_each_feature}, the performance decreases with the removal of any feature, showing that there are no redundant features. It is perhaps expected that  removing PSSM creates the biggest performance drop, but our newly introduced features, HSP, ProtVec1D, and Position are shown to be  very useful as well. 
-
-\textcolor{\myColor}{
-\subsubsection{The evaluation of the model architecture and the novel features}
-To show that the ensemble architecture and the three novel features improve the performance, we evaluated the CNN, RNN, and the ensemble model separately on Dset\_448 with and without the three new features, a total of six tests. Training is done as before (section \ref{section_ensemble}). In Fig. \ref{fig_CNN_RNN_ensemble}, we plotted the value of AUPRC and MCC of the six tests. Clearly, the ensemble model outperforms the individual CNN and RNN models. Further, the improvement due to the three new features is even higher, with the weakest model, CNN, on 12 features outperforming the ensemble on 9 features. }
-
-\subsubsection{Other explorations}
-We also tried some other ideas that could be potentially interesting, such as representing the protein sequence with one-hot embedding or the original 100 dimensional ProtVec. Unfortunately the results did not surpass the existing sequence representation. Under-sampling non-binding residuals and over-sampling binding residuals resulted in unstable performance, related to the ratio of the testing datasets. For example the prediction on the highest binding residue ratio Dset\_164 was improved by the sampling methods but not on other datasets. Attention mechanism also failed to improve the results. In terms of the network architecture, LSTM, 1D convolution, and combining the CNN and RNN network without training them separately have been tested. In the end we picked the reported architecture empirically. 
-
-\subsection{\textcolor{\mySecondColor}{++++ Biology ++++}}
-
-\textcolor{\mySecondColor}{We analyzed three different proteins.  These are the transcription factor SH2D2A (399 amino acids in length), the alpha-subunit of the haemoglobin protein (142 amino acids in length) and the SRY protein (204 amino acids
-in length).}
-
-\textcolor{\mySecondColor}{For each protein, BLASTP was used to search for homologues.  The search was restricted to the refseq\_protein database to ensure good quality and
-to proteins from mammalian organisms.  The SH2D2A sequences were further
-limited to isoform X1 and the haemoglobins sequences were restricted to
-proteins labelled as alpha subunits.  Sequences were aligned with MUSCLE
-\citep{edgar2004muscle} and any sequences with unusually long protein distances
-were further eliminated by hand.}
-
-\textcolor{\mySecondColor}{This resulted in 66 homologous SH2D2A sequences, 178 homologous alpha
-subunit haemoglobin sequences and 40 homolgous SRY sequences.  For each
-site in the alignment of these proteins, the frequency of the most
-conserved amino acid was recorded and compared to the PPI predicted by
-DELPHI in Figure x.  There are gaps in these figures since only aligned
-sites present in more than 10 taxa were included in this comparison.}
-
-\textcolor{\mySecondColor}{In general, Figure x.a and Figure x.c shows that the locations where
-DELPHI predicted a high probability of a protein-protein interaction are
-also the sites with a high degree of sequence conservation.  As expected
-this correlation is not perfect since sequence conservation can occur
-for many reasons other than PPI.  It will also be noted that the overall
-degree of conservation in Figure x.a for the alpha haemoglobin proteins is
-much more conserved than for the other two proteins and is an indication
-that these proteins are evolving slower.  Still PPI has a high probability
-around 130aa, 185aa and 240aa but has a lower probability at the sites
-around 175aa.  Similarly for sites around 350aa and 500aa in Figure x.c
-(protein SH2D2A) the PPI is low but the level of conservation is high.}
-
-\textcolor{\mySecondColor}{The protein SRY in Figure x.b binds to sites in the DNA rather
-than to other proteins or internally.  This is the reason for the
-high conservation around 190aa to 260aa.  Except for two sites the
-probabilities predicted by DELPHI fluctuate around low values.}
-
-\textcolor{\mySecondColor}{In general the data in Figure x show that sites with a high probability
-of PPI have a high degree of sequence conservation and indicate good
-support for the validity of the method.  The opposite is not true.
-Sequence conservation can occur for reasons other than the requirement
-that the sites are constrained by protein-protein interactions.}
-
-%----------------------------------------------------------------------
-
-\textcolor{\mySecondColor}{Caption Figure x: Three proteins were evaluated to compare the PPI
-predicted by DELPHI (orange) with the degree of site-by-site conservation
-(blue).  Only sites represented in ten or more taxa are included resulting
-in some apparent gaps.  The proteins are (a) alpha haemoglobin, (b) SRY
-and (c) SH2D2A.}
-
-
-
-
-% According to the databases the interaction sites are ...
-% 
-%     Site            order(32,35..36,42..43,93,95..96,104,108,111..112,
-%                     118..120,123..124,127,141..142)
-%                     /site_type="other"
-%                     /note="tetramer interface [polypeptide binding]"
-%                     /db_xref="CDD:271278"
-%     Site            order(33,43..44,59,62..63,66,84,88,98..99,102,137)
-%                     /site_type="other"
-%                     /note="heme binding site [chemical binding]"
-%                     /db_xref="CDD:271278"
-% 
-% --------------------------------------------------------------
-% 
-% SRY is a sex-determining gene.  I was only able to find a smaller
-% number of these genes where I thought the homology was clear.
-% 
-% In this case there are forty of them.  Sry is a little different in
-% that it binds DNA.
-% 
-% SRY  Site            order(62,64..65,67..68,71..72,75,79,87,92,95,98,117)
-%                      /site_type="DNA binding"
-%                      /note="DNA binding site [nucleotide binding]"
-%                      /db_xref="CDD:238684"
-% 
-% These sites should be conserved but might not show PPI.
-% 
-%
-
-
-\subsection{Software availability}
-\textcolor{\mySecondColor}{DELPHI is available both as a open sourced standalone software under the GPLv3 License and web server. The trained model, source code, and data processing pipeline are freely available at \texttt{github.com/lucian-ilie/DELPHI}. The web server is at  \texttt{www.csd.uwo.ca/\textasciitilde{}yli922/index.php}.
-It facilitates use without programming skills. The user can input protein sequences and receive the prediction results via email. The PSSMs of all proteins in the testing datasets as well as the human proteome are pre-computed on the server, so they are relatively faster. For a protein without pre-computed PSSM, of length 500, the average computation time on the web server is 15 minutes. 
-}
 \begin{table}[H]
   \centering
   \caption{\textcolor{\mySecondColor}{Performance comparison on Dset\_186, Dset\_164, and Dset\_72 using the same metrics. Bold fonts indicate the best results.}}
@@ -445,6 +339,25 @@ It facilitates use without programming skills. The user can input protein sequen
     \end{tabular}%
 \end{table}%
 
+
+
+
+\textcolor{\myColor}{
+DELPHI clearly outperforms the competitors in all metrics on all datasets although it shares the least similarities to the testing datasets.  The AUPRC is improved by 10.0\%, 0.6\%, 10.2\% comparing to the second best program on each dataset. The improvement on MCC are 18.7\%, 8.9\%, 27.7\% on each dataset. 
+}
+
+\subsection{Ablation study}
+
+\subsubsection{Feature evaluation}
+We conducted an experiment to show that all twelve feature are useful. We pruned one feature each time, and the remaining eleven features are used to train and then evaluate the DELPHI model. As shown in Fig. \ref{fig_remove_each_feature}, the performance decreases with the removal of any feature, showing that there are no redundant features. It is perhaps expected that  removing PSSM creates the biggest performance drop, but our newly introduced features, HSP, ProtVec1D, and Position are shown to be  very useful as well. 
+
+\textcolor{\myColor}{
+\subsubsection{The evaluation of the model architecture and the novel features}
+To show that the ensemble architecture and the three novel features improve the performance, we evaluated the CNN, RNN, and the ensemble model separately on Dset\_448 with and without the three new features, a total of six tests. Training is done as before (section \ref{section_ensemble}). In Fig. \ref{fig_CNN_RNN_ensemble}, we plotted the value of AUPRC and MCC of the six tests. Clearly, the ensemble model outperforms the individual CNN and RNN models. Further, the improvement due to the three new features is even higher, with the weakest model, CNN, on 12 features outperforming the ensemble on 9 features. }
+
+\subsubsection{Other explorations}
+We also tried some other ideas that could be potentially interesting, such as representing the protein sequence with one-hot embedding or the original 100 dimensional ProtVec. Unfortunately the results did not surpass the existing sequence representation. Under-sampling non-binding residuals and over-sampling binding residuals resulted in unstable performance, related to the ratio of the testing datasets. For example the prediction on the highest binding residue ratio Dset\_164 was improved by the sampling methods but not on other datasets. Attention mechanism also failed to improve the results. In terms of the network architecture, LSTM, 1D convolution, and combining the CNN and RNN network without training them separately have been tested. In the end we picked the reported architecture empirically. 
+
 \begin{figure}
 \centering
 \includegraphics[width=\columnwidth, height=5cm]{remove_features_individually_Testing.pdf}
@@ -459,6 +372,103 @@ It facilitates use without programming skills. The user can input protein sequen
   \label{fig_CNN_RNN_ensemble}}
 \end{figure}
 
+
+\begin{figure*}
+\centering
+\begin{tabular}{cc}
+\includegraphics[height=2.55cm]{hemoglobin_top178_conservation.pdf} & 
+\includegraphics[height=2.55cm]{SRY_conservation.pdf}\\
+\small (a) & \small (b)\\
+\multicolumn{2}{c}{\includegraphics[height=2.55cm]{SH2_conservation.pdf}}\\
+\multicolumn{2}{c}{\small (c)}
+\end{tabular}
+  \caption{\textcolor{\mySecondColor}{Three proteins were evaluated to compare the PPI
+predicted by DELPHI (orange) with the degree of site-by-site conservation
+(blue).  Only sites represented in ten or more taxa are included resulting
+in some apparent gaps.  The proteins are (a) alpha haemoglobin, (b) SRY
+and (c) SH2D2A.} 
+  \label{fig_conservation_vs_sitePred}}
+\end{figure*}
+
+
+\subsection{\textcolor{\mySecondColor}{++++ Biology ++++}}
+
+\textcolor{\mySecondColor}{We analyzed three different proteins.  These are the transcription factor SH2D2A (399 amino acids in length), the alpha-subunit of the haemoglobin protein (142 amino acids in length) and the SRY protein (204 amino acids
+in length).}
+
+\textcolor{\mySecondColor}{For each protein, BLASTP was used to search for homologues.  The search was restricted to the refseq\_protein database to ensure good quality and
+to proteins from mammalian organisms.  The SH2D2A sequences were further
+limited to isoform X1 and the haemoglobins sequences were restricted to
+proteins labelled as alpha subunits.  Sequences were aligned with MUSCLE
+\citep{edgar2004muscle} and any sequences with unusually long protein distances
+were further eliminated by hand.}
+
+\textcolor{\mySecondColor}{This resulted in 66 homologous SH2D2A sequences, 178 homologous alpha
+subunit haemoglobin sequences and 40 homolgous SRY sequences.  For each
+site in the alignment of these proteins, the frequency of the most
+conserved amino acid was recorded and compared to the PPI predicted by
+DELPHI in Figure~\ref{fig_conservation_vs_sitePred}.  There are gaps in these figures since only aligned
+sites present in more than 10 taxa were included in this comparison.}
+
+\textcolor{\mySecondColor}{In general, Figure~\ref{fig_conservation_vs_sitePred}.a and Figure~\ref{fig_conservation_vs_sitePred}.c shows that the locations where
+DELPHI predicted a high probability of a protein-protein interaction are
+also the sites with a high degree of sequence conservation.  As expected
+this correlation is not perfect since sequence conservation can occur
+for many reasons other than PPI.  It will also be noted that the overall
+degree of conservation in Figure~\ref{fig_conservation_vs_sitePred}.a for the alpha haemoglobin proteins is
+much more conserved than for the other two proteins and is an indication
+that these proteins are evolving slower.  Still PPI has a high probability
+around 130aa, 185aa and 240aa but has a lower probability at the sites
+around 175aa.  Similarly for sites around 350aa and 500aa in Figure~\ref{fig_conservation_vs_sitePred}.c
+(protein SH2D2A) the PPI is low but the level of conservation is high.}
+
+\textcolor{\mySecondColor}{The protein SRY in Figure~\ref{fig_conservation_vs_sitePred}.b binds to sites in the DNA rather
+than to other proteins or internally.  This is the reason for the
+high conservation around 190aa to 260aa.  Except for two sites the
+probabilities predicted by DELPHI fluctuate around low values.}
+
+\textcolor{\mySecondColor}{In general the data in Figure~\ref{fig_conservation_vs_sitePred} show that sites with a high probability
+of PPI have a high degree of sequence conservation and indicate good
+support for the validity of the method.  The opposite is not true.
+Sequence conservation can occur for reasons other than the requirement
+that the sites are constrained by protein-protein interactions.}
+
+
+
+% According to the databases the interaction sites are ...
+% 
+%     Site            order(32,35..36,42..43,93,95..96,104,108,111..112,
+%                     118..120,123..124,127,141..142)
+%                     /site_type="other"
+%                     /note="tetramer interface [polypeptide binding]"
+%                     /db_xref="CDD:271278"
+%     Site            order(33,43..44,59,62..63,66,84,88,98..99,102,137)
+%                     /site_type="other"
+%                     /note="heme binding site [chemical binding]"
+%                     /db_xref="CDD:271278"
+% 
+% --------------------------------------------------------------
+% 
+% SRY is a sex-determining gene.  I was only able to find a smaller
+% number of these genes where I thought the homology was clear.
+% 
+% In this case there are forty of them.  Sry is a little different in
+% that it binds DNA.
+% 
+% SRY  Site            order(62,64..65,67..68,71..72,75,79,87,92,95,98,117)
+%                      /site_type="DNA binding"
+%                      /note="DNA binding site [nucleotide binding]"
+%                      /db_xref="CDD:238684"
+% 
+% These sites should be conserved but might not show PPI.
+% 
+%
+
+
+\subsection{Software availability}
+\textcolor{\mySecondColor}{DELPHI is available both as a open sourced standalone software under the GPLv3 License and web server. The trained model, source code, and data processing pipeline are freely available at \texttt{github.com/lucian-ilie/DELPHI}. The web server is at  \texttt{www.csd.uwo.ca/\textasciitilde{}yli922/index.php}.
+It facilitates use without programming skills. The user can input protein sequences and receive the prediction results via email. The PSSMs of all proteins in the testing datasets as well as the human proteome are pre-computed on the server. The average computation time for a protein of length 500 on the web server is 3 minuets if having pre-computed PSSM and 15 minutes wihtout pre-computed PSSM.
+}
 
 
 \section{Conclusion}
@@ -485,12 +495,3 @@ The research of L.I. is funded by an NSERC Discovery Grant (R3143A01) and a Rese
 \bibliography{reference}
 
 \end{document}
-
-% SSWRF \citep{wei2016protein} computed
-% SPRINT \citep{taherzadeh2016sequence}. Web server is not available. https://sparks-lab.org/service/
-% CRF-PPI. computed
-
-% LORIS \citep{dhole2014sequence} available. I'll try https://sites.google.com/site/sukantamondal/software . SANN is no longer available for sovent accessibility prediction, so can't really test LORIS http://lee.kias.re.kr/~newton/sann/
-% SPRINGS \citep{singh2014springs} available. I'll try https://sites.google.com/site/predppis/ same as LORIS. SANN is no longer available. 1. bug in output1 format. 2. can't execute cannot execute binary file cannot execute binary file L1.
-% PSIVER \citep{murakami2010applying}. webserver available, https://mizuguchilab.org/PSIVER/. I'll try
-% SPPIDER \citep{porollo2007prediction}  webserver available I'll try. http://sppider.cchmc.org/ . Only allows uploading one sequence at a time. The server works fine.
