@@ -27,9 +27,10 @@ L8S 4K1}}
 \editor{Associate Editor: XXXXXXX}
 
 \abstract{\textbf{Motivation:} Proteins usually perform their functions by interacting with other proteins, which is why accurately predicting protein-protein interaction (PPI) binding sites is a fundamental problem. Experimental methods are slow and expensive. Therefore, great efforts are being made towards increasing the performance of computational methods.\\
-\textbf{Results:} We propose DELPHI (DEep Learning Prediction of Highly probable protein Interaction sites), a new sequence-based deep learning suite for PPI binding sites prediction. DELPHI has an ensemble structure which combines a CNN and a RNN component with fine tuning technique. Three novel features, HSP, position information, and ProtVec are used in addition to nine existing ones. \textcolor{\myColor}{We comprehensively compare DELPHI to nine state-of-the-art programs on five datasets, and DELPHI outperforms the competing methods in all metrics even though its training dataset shares the least similarities with the testing datasets. In the most important metrics, AUPRC and MCC, it surpasses the second best programs by as much as 18.5\% and 27.7\%, resp. We also demonstrated that the improvement is essentially due to using the ensemble model and, especially, the three new features.} \\
-\textbf{Availability:} \textcolor{\mySecondColor}{ The DELPHI web server, datasets, and results of in this study are freely available at\\ \texttt{www.csd.uwo.ca/\textasciitilde{}yli922/index.php}.\\
-The trained models, the DELPHI standalone source code, and the feature computation pipeline are freely available at \texttt{github.com/lucian-ilie/DELPHI}.} \\
+\textbf{Results:} We propose DELPHI (DEep Learning Prediction of Highly probable protein Interaction sites), a new sequence-based deep learning suite for PPI binding sites prediction. DELPHI has an ensemble structure which combines a CNN and a RNN component with fine tuning technique. Three novel features, HSP, position information, and ProtVec are used in addition to nine existing ones. \textcolor{\myColor}{We comprehensively compare DELPHI to nine state-of-the-art programs on five datasets, and DELPHI outperforms the competing methods in all metrics even though its training dataset shares the least similarities with the testing datasets. In the most important metrics, AUPRC and MCC, it surpasses the second best programs by as much as 18.5\% and 27.7\%, resp. We also demonstrated that the improvement is essentially due to using the ensemble model and, especially, the three new features.} \textcolor{\mySecondColor}{Using DELPHI it is shown that there is a strong correlation with protein-binding residues (PBRs) and sites with strong evolutionary conservation.  In addition DELPHI's predicted PBR sites closely match known data from Pfam.
+DELPHI is available as open sourced standalone software and web server.}  \\
+\textbf{Availability:} \textcolor{\mySecondColor}{ The DELPHI web server can be found at \texttt{www.csd.uwo.ca/\textasciitilde{}yli922/index.php}, with all datasets and results in this study. The trained models, the DELPHI standalone source code, and the feature computation pipeline are freely available at \href{https://github.com/lucian-ilie/DELPHI}{\texttt{github.com/lucian-ilie/DELPHI}}.
+} \\
 \textbf{Contact:} \href{ilie@uwo.ca}{ilie@uwo.ca}\\
 \textbf{Supplementary information:} Supplementary data are available at \textit{Bioinformatics}
 online.}
@@ -46,6 +47,11 @@ We introduce a new sequence-based PPI binding sites prediction method, DELPHI (D
 
 The contributions of the DELPHI study are as follows. \textcolor{\myColor}{
 First, a novel fine tuned ensemble model combing CNN and RNN is constructed. Second, three novel features, which are believed to be used the first time in PPI binding site prediction, are introduced. Third, a data processing and feature construction suite, is provided, aiming to alleviating the difficulty of tedious feature computation by the users.}
+
+\textcolor{\mySecondColor}{A strong relationship is show between DELPHI's prediction of protein binding sites and sites with a high degree of evolutionary conservation. While this relationship is not expected to be exclusive many binding sites will be conserved to maintain protein structure. This is demonstrated with three different mammalian proteins.  In addition, a comparison of DELPHI's predictions are in strong agreement with known protein-binding residues (PBRs) from the Pfam database.}
+
+
+
 
 \begin{methods}
 \section{Materials and Methods}
@@ -254,15 +260,6 @@ The formulas for calculating the metrics are as follows, where true positives ($
 \end{array}
 \]
 
-\subsection{Comparative assessment of predictive performance}
-\subsubsection{Performance comparison on Dset\_448 and Dset\_355}
-We first compare the DELPHI model with eight programs on Dset\_448. This dataset is the largest and the most recently published. As shown in Table \ref{tab_comp_448_355}, DELPHI surpasses competitors in all metrics with an improvement of 17.4\%, 18.3\%, and 3.08\% on AUPRC, MCC, and AUROC respectively comparing to the second best program SCRIBER.
-
-\textcolor{\myColor}{As mentioned earlier, Dset\_448 cannot be used for DLPred, so we include a comparison of all programs on Dset\_355. As shown in Table \ref{tab_comp_448_355}, the performance of DLPred is very similar to the second best predictor, SCRIBER.  DELPHI still surpasses the second best program by 18.5\% and 20.9\% on AUPRC and MCC.  }
-
-\subsubsection{Performance comparison on Dset\_186, Dset\_164, and Dset\_72}\label{section_four_tests}
-\textcolor{\myColor}{To further compare DELPHI with other programs, we used another three previously published datasets: Dset\_186, Dset\_164, and Dset\_72. Based on the availability and usability, We ran SPPIDER, PSIVER, CRFPPI, SCRIBER, DELPred, and DELPHI on them. Note that SSWRF, CRFPPI, and PSIVER use Dset\_186 as their training datasets, so these three programs are excluded on Dset\_186. As shown in Table \ref{tab_ds186_164_72}, in general, the performance rank is the very similar to the ones in Dset\_448 and Dset\_355.}
-
 % \clearpage
 \begin{table}[H]
   \centering
@@ -340,6 +337,15 @@ We first compare the DELPHI model with eight programs on Dset\_448. This dataset
 \end{table}%
 
 
+\subsection{Comparative assessment of predictive performance}
+\subsubsection{Performance comparison on Dset\_448 and Dset\_355}
+We first compare the DELPHI model with eight programs on Dset\_448. This dataset is the largest and the most recently published. As shown in Table \ref{tab_comp_448_355}, DELPHI surpasses competitors in all metrics with an improvement of 17.4\% and 18.3\% on AUPRC and MCC respectively comparing to the second best program SCRIBER.
+
+\textcolor{\myColor}{As mentioned earlier, Dset\_448 cannot be used for DLPred, so we include a comparison of all programs on Dset\_355. As shown in Table \ref{tab_comp_448_355}, the performance of DLPred is very similar to the second best predictor, SCRIBER.  DELPHI still surpasses the second best program by 18.5\% and 20.9\% on AUPRC and MCC.  }
+
+\subsubsection{Performance comparison on Dset\_186, Dset\_164, and Dset\_72}\label{section_four_tests}
+\textcolor{\myColor}{To further compare DELPHI with other programs, we used another three previously published datasets: Dset\_186, Dset\_164, and Dset\_72. Based on the availability and usability, We ran SPPIDER, PSIVER, CRFPPI, SCRIBER, DELPred, and DELPHI on them. Note that SSWRF, CRFPPI, and PSIVER use Dset\_186 as their training datasets, so these three programs are excluded on Dset\_186. As shown in Table \ref{tab_ds186_164_72}, in general, the performance rank is the very similar to the ones in Dset\_448 and Dset\_355.}
+
 
 
 \textcolor{\myColor}{
@@ -349,7 +355,7 @@ DELPHI clearly outperforms the competitors in all metrics on all datasets althou
 \subsection{Ablation study}
 
 \subsubsection{Feature evaluation}
-We conducted an experiment to show that all twelve feature are useful. We pruned one feature each time, and the remaining eleven features are used to train and then evaluate the DELPHI model. As shown in Fig. \ref{fig_remove_each_feature}, the performance decreases with the removal of any feature, showing that there are no redundant features. It is perhaps expected that  removing PSSM creates the biggest performance drop, but our newly introduced features, HSP, ProtVec1D, and Position are shown to be  very useful as well. 
+We conducted an experiment to show that all twelve features are useful. We pruned one feature each time, and the remaining eleven features are used to train and then evaluate the DELPHI model. As shown in Fig. \ref{fig_remove_each_feature}, the performance decreases with the removal of any feature, showing that there are no redundant features. It is perhaps expected that  removing PSSM creates the biggest performance drop, but our newly introduced features, HSP, ProtVec1D, and Position are shown to be  very useful as well. 
 
 \textcolor{\myColor}{
 \subsubsection{The evaluation of the model architecture and the novel features}
@@ -382,18 +388,14 @@ We also tried some other ideas that could be potentially interesting, such as re
 \multicolumn{2}{c}{\includegraphics[height=2.55cm]{SH2_conservation.pdf}}\\
 \multicolumn{2}{c}{\small (c)}
 \end{tabular}
-  \caption{\textcolor{\mySecondColor}{Three proteins were evaluated to compare the PPI
-predicted by DELPHI (orange) with the degree of site-by-site conservation
-(blue).  Only sites represented in ten or more taxa are included resulting
-in some apparent gaps.  The proteins are (a) alpha haemoglobin, (b) SRY
-and (c) SH2D2A.} 
+  \caption{\textcolor{\mySecondColor}{Three proteins were evaluated to compare the PPI binding sites predicted by DELPHI (orange) with the degree of site-by-site conservation (blue).  Only sites represented in ten or more taxa are included resulting in some apparent gaps.  The proteins are (a) alpha haemoglobin, (b) SRY and (c) SH2D2A.} 
   \label{fig_conservation_vs_sitePred}}
 \end{figure*}
 
 
-\subsection{\textcolor{\mySecondColor}{Application}}
+\subsection{\textcolor{\mySecondColor}{Evolutionary conservation}}
 
-\textcolor{\mySecondColor}{We analyzed three different proteins.  These are the transcription factor SH2D2A (399 amino acids in length), the alpha-subunit of the haemoglobin protein (142 amino acids in length) and the SRY protein (204 amino acids
+\textcolor{\mySecondColor}{As an application of DELPHI's predictive power we analyzed three different proteins.  These are the transcription factor SH2D2A (399 amino acids in length), the alpha-subunit of the haemoglobin protein (142 amino acids in length) and the SRY protein (204 amino acids
 in length).}
 
 \textcolor{\mySecondColor}{For each protein, BLASTP was used to search for homologues.  The search was restricted to the refseq\_protein database to ensure good quality and
@@ -406,7 +408,7 @@ were further eliminated by hand.}
 \textcolor{\mySecondColor}{This resulted in 66 homologous SH2D2A sequences, 178 homologous alpha
 subunit haemoglobin sequences and 40 homolgous SRY sequences.  For each
 site in the alignment of these proteins, the frequency of the most
-conserved amino acid was recorded and compared to the PPI predicted by
+conserved amino acid was recorded and compared to the PPI binding sites predicted by
 DELPHI in Figure~\ref{fig_conservation_vs_sitePred}.  There are gaps in these figures since only aligned
 sites present in more than 10 taxa were included in this comparison.}
 
@@ -465,9 +467,33 @@ that the sites are constrained by protein-protein interactions.}
 %
 
 
-\subsection{Software availability}
+
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{plot_DS448_domain.pdf}
+  \caption{\textcolor{\mySecondColor}{A comparison of the predicted PBRs from DELPHI and from SCRIBER compared to native PBRs.  It is apparent that DELPHI fits the curve better except perhaps at the low end where there are few PBR residues per domain.} 
+  \label{fig_plot_DS448_domain}}
+\end{figure}
+
+
+\subsection{\textcolor{\mySecondColor}{Accuracy of PBR prediction}}
+% I don't think that there is sufficient information here to warrant a separate section.
+\textcolor{\mySecondColor}{Following Zhang and Kurgan (2019) we compared the protein-binding residues (PBRs) predicted by SCRIBER and by DELPHI on DSet\_448.  
+A total of 600 domains with native PBRs were collected from the Pfam (El-Gebali et al., 2019) annotation of proteins by Zhang and Kurgan (2019).  
+Figure \ref{fig_plot_DS448_domain} shows the number of PBRs in these domains and compares them to the numbers predicted by SCRIBER and DELPHI. 
+It is apparent that DELPHI has a closer fit to the native data and this is especially 
+true with larger numbers of PBRs per domain but DELPHI perhaps over estimates the percentage of domains with PBRs when there are few PBRs per domain.}
+
+\textcolor{\mySecondColor}{
+To further assist users, we ran DELPHI on the entire human proteome. The sequences are downloaded from Uniprot in June 2020. All the prediction results are available to download at \texttt{www.csd.uwo.ca/\textasciitilde{}yli922/index.php}.
+}
+
+
+
+
+\subsection{\textcolor{\mySecondColor}{DELPHI webserver and software availability}}
 \textcolor{\mySecondColor}{DELPHI is available both as a open sourced standalone software under the GPLv3 License and web server. The trained model, source code, and data processing pipeline are freely available at \texttt{github.com/lucian-ilie/DELPHI}. The web server is at  \texttt{www.csd.uwo.ca/\textasciitilde{}yli922/index.php}.
-It facilitates use without programming skills. The user can input protein sequences and receive the prediction results via email. The PSSMs of all proteins in the testing datasets as well as the human proteome are pre-computed on the server. The average computation time for a protein of length 500 on the web server is 3 minuets if having pre-computed PSSM and 15 minutes wihtout pre-computed PSSM.
+It facilitates use without programming skills. The user can input protein sequences and receive the prediction results via email. The PSSMs of all proteins in the testing datasets as well as the human proteome are pre-computed on the server. The average computation time for a protein of length 500 on the web server is 3 minuets if having pre-computed PSSM and 15 minutes if without pre-computed PSSM.
 }
 
 
@@ -482,7 +508,7 @@ We hope that in the future, the model architecture, the usage of the three new f
 %   \label{fig_ROC_PR}
 % \end{figure*}
 \section*{Acknowledgements}
-We would like to thank Jian Zhang for running SCRIBER on the testing datasets, providing the prediction results of competing methods on Dset\_448 and Dset\_355, and discussing technical details, Buzhong Zhang for running DLPred on Dset\_448, Giancarlo Colmenare for suggestions on tuning the network, Min Zeng for the explanation on DeepPPISP, Alexey Porollo for providing the script for summiting batch jobs to the SPPIDER server, and Tanner Bohn for suggesting using the position information.
+We would like to thank Jian Zhang for running SCRIBER on the testing datasets, providing the prediction results of competing methods on Dset\_448 and Dset\_355, and discussing technical details, Buzhong Zhang for running DLPred on Dset\_448, Giancarlo Colmenare for suggestions on tuning the network, Min Zeng for the explanation on DeepPPISP, Alexey Porollo for providing the script for submitting batch jobs to the SPPIDER server, Tanner Bohn for suggesting using the position information, \textcolor{\mySecondColor}{and Compute Canada for providing the cloud virtual machine that serves as the backend of the DELPHI web server.}
 
 \section*{Funding}
 The research of L.I. is funded by an NSERC Discovery Grant (R3143A01) and a Research Tools and Instruments Grant (R3143A07). \textcolor{\mySecondColor}{The research of G.B.G. is funded by an NSERC Discovery Grant RGPIN-2020-05733.}
