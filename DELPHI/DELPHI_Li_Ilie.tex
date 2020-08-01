@@ -5,7 +5,8 @@
 \usepackage[table]{xcolor}
 \usepackage{float}
 \newcommand{\myColor}{black}
-\newcommand{\mySecondColor}{red}
+\newcommand{\mySecondColor}{black}
+\newcommand{\mythirdColor}{red}
 \access{Advance Access Publication Date: Day Month Year}
 \appnotes{Manuscript Category}
 
@@ -214,12 +215,12 @@ The DELPHI model takes 2.1 hours to train the CNN component, 0.5 hour to train t
     Epoch in CNN & 8 \\
     Kernel size in CNN & 5 \\
     Stride in CNN & 1 \\
-    Padding in CNN & valid \\
-    Number of filters in CNN & 64 \\
+    Padding in CNN & same \\
+    Number of filters in CNN & 48 \\
     Fully connected unit in CNN & 64, 1 \\
     \hline
     Epoch in RNN & 9 \\
-    GRU unit & 32 \\
+    GRU unit & 64 \\
     Fully connected unit in RNN & 64, 1 \\
     \hline
     Epoch in ensemble & 5 \\
@@ -290,8 +291,8 @@ The formulas for calculating the metrics are as follows, where true positives ($
     LORIS & 0.242 & 0.896 & 0.240 & 0.818 & 0.241 & 0.137 & 0.637 & 0.203 \\
     CRFPPI & 0.247 & 0.897 & 0.245 & 0.819 & 0.246 & 0.143 & 0.662 & 0.214 \\
     SSWRF & 0.268 & 0.901 & 0.268 & 0.825 & 0.268 & 0.168 & 0.667 & 0.228 \\
-    SCRIBER & 0.322 & 0.908 & 0.322 & 0.838 & 0.322 & 0.230 & 0.719 & 0.275 \\
     DLPred & 0.308 & 0.906 & 0.308 & 0.835 & 0.308 & 0.214 & 0.724 & 0.272 \\
+    SCRIBER & 0.322 & 0.908 & 0.322 & 0.838 & 0.322 & 0.230 & 0.719 & 0.275 \\
     DELPHI & \textbf{0.364} & \textbf{0.914} & \textbf{0.364} & \textbf{0.848} & \textbf{0.364} & \textbf{0.278} & \textbf{0.746} & \textbf{0.326} \\
     \hline
     \end{tabular}%
@@ -362,7 +363,9 @@ We conducted an experiment to show that all twelve features are useful. We prune
 To show that the ensemble architecture and the three novel features improve the performance, we evaluated the CNN, RNN, and the ensemble model separately on Dset\_448 with and without the three new features, a total of six tests. Training is done as before (section \ref{section_ensemble}). In Fig. \ref{fig_CNN_RNN_ensemble}, we plotted the value of AUPRC and MCC of the six tests. Clearly, the ensemble model outperforms the individual CNN and RNN models. Further, the improvement due to the three new features is even higher, with the weakest model, CNN, on 12 features outperforming the ensemble on 9 features. }
 
 \subsubsection{Other explorations}
-We also tried some other ideas that could be potentially interesting, such as representing the protein sequence with one-hot embedding or the original 100 dimensional ProtVec. Unfortunately the results did not surpass the existing sequence representation. Under-sampling non-binding residuals and over-sampling binding residuals resulted in unstable performance, related to the ratio of the testing datasets. For example the prediction on the highest binding residue ratio Dset\_164 was improved by the sampling methods but not on other datasets. Attention mechanism also failed to improve the results. In terms of the network architecture, LSTM, 1D convolution, and combining the CNN and RNN network without training them separately have been tested. In the end we picked the reported architecture empirically. 
+We explored some other ideas that could be potentially interesting, such as representing the protein sequence with one-hot embedding or the original 100 dimensional ProtVec. Unfortunately the results did not surpass the existing sequence representation. Under-sampling non-binding residuals and over-sampling binding residuals resulted in unstable performance, related to the ratio of the testing datasets. For example the prediction on the highest binding residue ratio Dset\_164 was improved by the sampling methods but not on other datasets. Attention mechanism also failed to improve the results. In terms of the network architecture, LSTM, 1D convolution, and combining the CNN and RNN network without training them separately have been tested. In the end we picked the reported architecture empirically. 
+
+\textcolor{\mythirdColor}{We also tried interpreting and visualizing what DELPHI has learned in the CNN model. Following the practise in DeepMind \citep{alipanahi2015predicting}, we computed the position frequency matrix using the activated values after the convolution and the relu operations and then transformed them into sequence logos. The obtained logos are close to the background frequency of the amino acids which indicates DELPHI learns more abstract underline information rather then motifs, very likely due to the complex features it is trained on.} 
 
 \begin{figure}
 \centering
@@ -501,6 +504,8 @@ It facilitates use without programming skills. The user can input protein sequen
 We have presented a new deep learning model and program DELPHI, for predicting PPI binding sites. We compared DELPHI with nine current state-of-the-art programs on five datasets and demonstrated that DELPHI has a higher prediction performance. There is still plenty room for improvement on this topic as the highest AUROC in all tests is 0.746. 
 We hope that in the future, the model architecture, the usage of the three new features, and the many-to-one structure can be extended to predicting protein biding with other types of molecules, such as DNA, RNA, and ligand. Other deep learning techniques could be better used on this topic including better pre-trained embedding, better sampling methods for imbalanced problems in bioinformatics. 
 
+\textcolor{\mythirdColor}{The interpretation of what the deep learning model has learned remains as an interesting and challenging problem. Attempts in the bioinformatics realm have been made by \cite{lanchantin2017deep}. However, the model input is one-hot encoding of DNA, which is more straightforward than protein sequences represented by complex features.}
+
 % \begin{figure*}
 % \centering
 % \includegraphics[width=\textwidth]{img/combine_plots.pdf}
@@ -508,7 +513,7 @@ We hope that in the future, the model architecture, the usage of the three new f
 %   \label{fig_ROC_PR}
 % \end{figure*}
 \section*{Acknowledgements}
-We would like to thank Jian Zhang for running SCRIBER on the testing datasets, providing the prediction results of competing methods on Dset\_448 and Dset\_355, and discussing technical details, Buzhong Zhang for running DLPred on Dset\_448, Giancarlo Colmenare for suggestions on tuning the network, Min Zeng for the explanation on DeepPPISP, Alexey Porollo for providing the script for submitting batch jobs to the SPPIDER server, Tanner Bohn for suggesting using the position information, \textcolor{\mySecondColor}{and Compute Canada for providing the cloud virtual machine that serves as the backend of the DELPHI web server.}
+We would like to thank Jian Zhang for running SCRIBER on the testing datasets, providing the prediction results of competing methods on Dset\_448 and Dset\_355, and discussing technical details, Buzhong Zhang for running DLPred on Dset\_448, Giancarlo Colmenare for suggestions on tuning the network, Min Zeng for the explanation on DeepPPISP, Alexey Porollo for providing the script for submitting batch jobs to the SPPIDER server, Tanner Bohn for suggesting using the position information, \textcolor{\mySecondColor}{Compute Canada for providing the cloud virtual machine that serves as the backend of the DELPHI web server, \textcolor{\mythirdColor}{and anonymous reviewers for the insightful comments and suggestions on improving the manuscript.}}
 
 \section*{Funding}
 The research of L.I. is funded by an NSERC Discovery Grant (R3143A01) and a Research Tools and Instruments Grant (R3143A07). \textcolor{\mySecondColor}{The research of G.B.G. is funded by an NSERC Discovery Grant RGPIN-2020-05733.}
